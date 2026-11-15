@@ -52,7 +52,7 @@ export const commercialContact: {
  * Usa o vídeo oficial enviado (/media/jojo/video_hero.mp4) e poster estático real.
  */
 export const heroMedia: HeroMedia = {
-  videoMobile: '/media/jojo/video_hero.mp4',
+  videoMobile: '/media/jojo/jojo_bg_mobile_0_7.mp4',
   videoDesktop: '/media/jojo/jojo_init_site.mp4',
   posterMobile: '/media/jojo/hero-poster.jpg',
   posterDesktop: '/media/jojo/hero-poster.jpg',
