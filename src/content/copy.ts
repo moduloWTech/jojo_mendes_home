@@ -36,6 +36,8 @@ export const copy = {
   },
   hero: {
     srOnlyHeading: 'Jojo Mendes',
+    desktopTaglineLine1: 'Forró, alegria e muita cantiga boa',
+    desktopTaglineLine2: 'para o seu evento!',
     primaryCta: 'Agendar show',
     secondaryCta: 'Ver agenda',
   },

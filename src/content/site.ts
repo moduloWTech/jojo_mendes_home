@@ -53,7 +53,7 @@ export const commercialContact: {
  */
 export const heroMedia: HeroMedia = {
   videoMobile: '/media/jojo/video_hero.mp4',
-  videoDesktop: '/media/jojo/video_hero.mp4',
+  videoDesktop: '/media/jojo/jojo_init_site.mp4',
   posterMobile: '/media/jojo/hero-poster.jpg',
   posterDesktop: '/media/jojo/hero-poster.jpg',
   posterAlt: 'Jojo Mendes cantando ao vivo no palco',
