@@ -28,27 +28,27 @@ export function Hero() {
     return () => mediaQuery.removeEventListener('change', listener);
   }, []);
 
-  const mobileVideoSrc = heroMedia.videoMobile;
   const desktopVideoSrc = heroMedia.videoDesktop ?? heroMedia.videoMobile;
-  const shouldShowMobileVideo =
-    Boolean(mobileVideoSrc) && !prefersReducedMotion && !videoFailed;
-  const shouldShowDesktopVideo =
+  const shouldShowVideo =
     Boolean(desktopVideoSrc) && !prefersReducedMotion && !videoFailed;
 
   return (
     <section
       id="inicio"
       aria-label={copy.nav.home}
-      className="relative min-h-[100svh] w-full overflow-hidden bg-[#0B0B0D] xl:bg-[#EEF0F4]"
+      className="relative h-[100svh] max-h-[100svh] w-full overflow-hidden bg-[#ECEEF2]"
     >
       {/* Único H1 semântico da Home para leitores de tela e SEO */}
       <h1 className="sr-only">{copy.hero.srOnlyHeading}</h1>
 
-      {/* Camada de vídeo full-bleed exclusiva para Mobile/Tablet (<1200px) */}
-      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden xl:hidden">
-        {shouldShowMobileVideo && mobileVideoSrc ? (
+      {/* Camada de vídeo de background cinza-claro para Mobile/Tablet (<1200px) */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 overflow-hidden xl:hidden"
+        aria-hidden="true"
+      >
+        {shouldShowVideo && desktopVideoSrc ? (
           <video
-            key={`mobile-${mobileVideoSrc}`}
+            key={`mobile-bg-${desktopVideoSrc}`}
             autoPlay
             muted
             loop
@@ -56,12 +56,15 @@ export function Hero() {
             preload="metadata"
             poster={heroMedia.posterMobile}
             onError={() => setVideoFailed(true)}
-            style={{
-              objectPosition: heroMedia.positionMobile ?? 'center 25%',
+            onTimeUpdate={(e) => {
+              if (e.currentTarget.currentTime >= 7) {
+                e.currentTarget.currentTime = 0;
+                void e.currentTarget.play();
+              }
             }}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover object-center grayscale contrast-110 opacity-[0.24]"
           >
-            <source src={mobileVideoSrc} type="video/mp4" />
+            <source src={desktopVideoSrc} type="video/mp4" />
           </video>
         ) : (
           <Image
@@ -70,26 +73,19 @@ export function Hero() {
             fill
             priority
             sizes="100vw"
-            style={{
-              objectPosition: heroMedia.positionMobile ?? 'center 25%',
-            }}
-            className="object-cover"
+            className="object-cover object-center grayscale opacity-20"
           />
         )}
 
-        <div className="absolute inset-0 bg-ink-950/35" aria-hidden="true" />
-        <div
-          className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/70 to-ink-950/25"
-          aria-hidden="true"
-        />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(246,247,250,0.52)_0%,rgba(234,236,241,0.82)_65%,rgba(218,222,230,0.94)_100%)]" />
       </div>
 
       {/* Composição Mobile (<1200px) */}
       <HeroMobile />
 
-      {/* Composição Desktop (>=1200px) com vídeo rodando dentro das letras EITA */}
+      {/* Composição Desktop (>=1200px) */}
       <HeroDesktop
-        shouldShowVideo={shouldShowDesktopVideo}
+        shouldShowVideo={shouldShowVideo}
         videoSrc={desktopVideoSrc}
         onVideoError={() => setVideoFailed(true)}
       />

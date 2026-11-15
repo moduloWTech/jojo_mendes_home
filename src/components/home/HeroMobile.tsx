@@ -1,38 +1,92 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
-import { brand } from '@/content/site';
+import Link from 'next/link';
+import { CalendarDays, ArrowRight, PlayCircle } from 'lucide-react';
 import { copy, destinations } from '@/content/copy';
-import { PrimaryButton, SecondaryButton } from '@/components/ui/Button';
+
+const EITA_MASK_STYLE: React.CSSProperties = {
+  WebkitMaskImage: "url('/media/jojo/hero-desktop-eita-mask.png')",
+  maskImage: "url('/media/jojo/hero-desktop-eita-mask.png')",
+  WebkitMaskSize: '100% 100%',
+  maskSize: '100% 100%',
+  WebkitMaskRepeat: 'no-repeat',
+  maskRepeat: 'no-repeat',
+  WebkitMaskPosition: 'center',
+  maskPosition: 'center',
+};
 
 export function HeroMobile() {
   return (
     <div
       data-testid="hero-mobile"
-      className="relative z-10 flex min-h-[100svh] w-full flex-col justify-end items-center px-5 pt-24 pb-[max(32px,calc(env(safe-area-inset-bottom)+24px))] xl:hidden"
+      className="relative z-10 flex h-[100svh] max-h-[100svh] w-full flex-col items-center justify-between overflow-hidden px-4 pt-[72px] pb-[max(20px,calc(env(safe-area-inset-bottom)+14px))] xl:hidden"
     >
-      <div className="flex w-full max-w-[320px] flex-col items-center text-center">
-        <div className="mb-7 py-2">
+      {/* Bloco central: Arte Jojo Mendes + EITA CANTIGA! proporcional e adaptada para a tela vertical do celular */}
+      <div className="relative my-auto w-full max-w-[370px] sm:max-w-[430px] max-h-[calc(100svh-228px)] aspect-[1199/1144] select-none">
+        {/* Camada 1: Foto solo da Jojo dentro das letras EITA */}
+        <div
+          style={EITA_MASK_STYLE}
+          className="pointer-events-none absolute left-[28.6%] top-[21.85%] z-10 h-[37.85%] w-[67.7%] overflow-hidden bg-[#181416]"
+          aria-hidden="true"
+        >
           <Image
-            src={brand.logo.src}
-            alt={brand.logo.alt}
-            width={brand.logo.width}
-            height={brand.logo.height}
+            src="/media/jojo/hero-desktop-eita-solo-v3.jpg"
+            alt=""
+            fill
             priority
-            sizes="(max-width: 767px) 72vw, 300px"
-            className="h-auto w-[min(72vw,300px)] object-contain drop-shadow-[0_12px_28px_rgba(0,0,0,0.75)]"
+            sizes="(max-width: 767px) 70vw, 320px"
+            className="object-cover object-center"
           />
         </div>
 
-        <div className="flex w-full flex-col gap-3">
-          <PrimaryButton href={destinations.booking} fullWidth>
-            {copy.hero.primaryCta}
-          </PrimaryButton>
-          <SecondaryButton href={destinations.schedule} fullWidth>
-            {copy.hero.secondaryCta}
-          </SecondaryButton>
-        </div>
+        {/* Camada 2: Arte principal com Jojo Mendes (camisa com logo oficial), mão sobre o E e CANTIGA! em ouro */}
+        <Image
+          src="/media/jojo/hero-desktop-frame-v2.png"
+          alt="Jojo Mendes — Eita Cantiga!"
+          fill
+          priority
+          sizes="(max-width: 767px) 92vw, 430px"
+          className="pointer-events-none relative z-20 object-contain"
+        />
+
+        <p className="sr-only">
+          {copy.hero.desktopTaglineLine1} {copy.hero.desktopTaglineLine2}
+        </p>
+      </div>
+
+      {/* Bloco inferior: Os 2 CTAs empilhados com largura total e área de toque confortável no polegar */}
+      <div className="relative z-30 flex w-full max-w-[350px] sm:max-w-[380px] flex-col gap-2.5">
+        <Link
+          href={destinations.booking}
+          className="group inline-flex min-h-[48px] w-full items-center justify-center gap-2.5 rounded-pill bg-gradient-to-b from-[#FAE084] via-[#EBB338] to-[#CE8814] px-6 text-[16px] font-bold text-[#111115] shadow-[0_8px_20px_rgba(206,136,20,0.32)] transition-all duration-150 ease-out active:scale-[0.99]"
+        >
+          <CalendarDays
+            className="h-4 w-4 shrink-0 text-[#111115]"
+            strokeWidth={2}
+            aria-hidden="true"
+          />
+          <span>{copy.hero.primaryCta}</span>
+          <ArrowRight
+            className="h-4 w-4 shrink-0 text-[#111115]"
+            strokeWidth={2}
+            aria-hidden="true"
+          />
+        </Link>
+
+        <Link
+          href={destinations.schedule}
+          className="group inline-flex min-h-[48px] w-full items-center justify-center gap-2.5 rounded-pill border border-[#1A1A22]/75 bg-white/65 px-6 text-[16px] font-semibold text-[#111115] backdrop-blur-sm transition-all duration-150 ease-out active:scale-[0.99]"
+        >
+          <PlayCircle
+            className="h-4 w-4 shrink-0 text-[#111115]"
+            strokeWidth={2}
+            aria-hidden="true"
+          />
+          <span>{copy.hero.secondaryCta}</span>
+        </Link>
       </div>
     </div>
   );
 }
-
