@@ -1,0 +1,328 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #0B0B0D;
+  --color-bg-alt: #141317;
+  --color-surface: #232127;
+  --color-surface-hover: #353139;
+  --color-text: #FAF7F1;
+  --color-text-muted: #D2C9BC;
+  --color-text-inverse: #0B0B0D;
+  --color-primary: #EFC16B;
+  --color-primary-hover: #F7D995;
+  --color-border: #514A51;
+  --color-border-subtle: #343036;
+  --color-focus: #F7D995;
+  --color-danger: #FB7185;
+
+  --container-max: 1280px;
+  --radius-button: 12px;
+  --radius-card: 20px;
+  --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.20);
+  --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.36);
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  overflow-x: hidden;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-manrope), Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  min-height: 100svh;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+section[id] {
+  scroll-margin-top: 88px;
+}
+
+@layer components {
+  .site-container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  @media (min-width: 360px) {
+    .site-container {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .site-container {
+      padding-left: 32px;
+      padding-right: 32px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .site-container {
+      padding-left: 64px;
+      padding-right: 64px;
+    }
+  }
+
+  .section-spacing {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+
+  @media (min-width: 768px) {
+    .section-spacing {
+      padding-top: 88px;
+      padding-bottom: 88px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .section-spacing {
+      padding-top: 112px;
+      padding-bottom: 112px;
+    }
+  }
+
+  /* Escala Tipográfica Fechada — Design System Seção 04.1 */
+  .type-display-xl {
+    font-family: var(--font-cormorant), Georgia, serif;
+    font-weight: 600;
+    font-size: 48px;
+    line-height: 50px;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  @media (min-width: 768px) {
+    .type-display-xl {
+      font-size: 72px;
+      line-height: 76px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .type-display-xl {
+      font-size: 104px;
+      line-height: 104px;
+    }
+  }
+
+  .type-display-l {
+    font-family: var(--font-cormorant), Georgia, serif;
+    font-weight: 600;
+    font-size: 40px;
+    line-height: 44px;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  @media (min-width: 768px) {
+    .type-display-l {
+      font-size: 56px;
+      line-height: 62px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .type-display-l {
+      font-size: 80px;
+      line-height: 84px;
+    }
+  }
+
+  .type-h1 {
+    font-family: var(--font-cormorant), Georgia, serif;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 40px;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  @media (min-width: 768px) {
+    .type-h1 {
+      font-size: 48px;
+      line-height: 54px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .type-h1 {
+      font-size: 64px;
+      line-height: 68px;
+    }
+  }
+
+  .type-h2 {
+    font-family: var(--font-cormorant), Georgia, serif;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 38px;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  @media (min-width: 768px) {
+    .type-h2 {
+      font-size: 40px;
+      line-height: 46px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .type-h2 {
+      font-size: 52px;
+      line-height: 58px;
+    }
+  }
+
+  .type-h3 {
+    font-family: var(--font-cormorant), Georgia, serif;
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 32px;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  @media (min-width: 768px) {
+    .type-h3 {
+      font-size: 30px;
+      line-height: 38px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .type-h3 {
+      font-size: 36px;
+      line-height: 44px;
+    }
+  }
+
+  .type-h4 {
+    font-family: var(--font-manrope), Arial, sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 28px;
+    letter-spacing: -0.015em;
+  }
+  @media (min-width: 768px) {
+    .type-h4 {
+      font-size: 24px;
+      line-height: 32px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .type-h4 {
+      font-size: 28px;
+      line-height: 36px;
+    }
+  }
+
+  .type-body-lg {
+    font-family: var(--font-manrope), Arial, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 29px;
+    letter-spacing: 0;
+  }
+  @media (min-width: 768px) {
+    .type-body-lg {
+      font-size: 19px;
+      line-height: 30px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .type-body-lg {
+      font-size: 20px;
+      line-height: 32px;
+    }
+  }
+
+  .type-body {
+    font-family: var(--font-manrope), Arial, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    letter-spacing: 0;
+  }
+  @media (min-width: 768px) {
+    .type-body {
+      font-size: 16px;
+      line-height: 27px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .type-body {
+      font-size: 17px;
+      line-height: 28px;
+    }
+  }
+
+  .type-body-sm {
+    font-family: var(--font-manrope), Arial, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: 0;
+  }
+
+  .type-label {
+    font-family: var(--font-manrope), Arial, sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0;
+  }
+
+  .type-eyebrow {
+    font-family: var(--font-manrope), Arial, sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  @media (min-width: 768px) {
+    .type-eyebrow {
+      font-size: 12px;
+      line-height: 19px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .type-eyebrow {
+      font-size: 13px;
+      line-height: 20px;
+    }
+  }
+
+  .type-caption {
+    font-family: var(--font-manrope), Arial, sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 18px;
+    letter-spacing: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
