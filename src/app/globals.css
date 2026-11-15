@@ -313,6 +313,133 @@ section[id] {
   }
 }
 
+/* ==========================================================================
+   Animações de Abertura de Palco e Micro-interações da Hero (#inicio)
+   ========================================================================== */
+@keyframes heroStageEntrance {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 32px, 0) scale(0.94);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes heroEitaReveal {
+  0% {
+    opacity: 0;
+    transform: scale(1.18) translate3d(-12px, 8px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.03) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes heroKenBurns {
+  0%,
+  100% {
+    transform: scale(1.02) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.08) translate3d(-6px, -4px, 0);
+  }
+}
+
+@keyframes heroCtaReveal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0) scale(0.88);
+  }
+  70% {
+    opacity: 1;
+    transform: translate3d(0, -3px, 0) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes heroShineSweep {
+  0% {
+    transform: translateX(-140%) skewX(-22deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(320%) skewX(-22deg);
+    opacity: 0;
+  }
+}
+
+@keyframes heroSpotlightPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  100% {
+    opacity: 0.65;
+    transform: scale(1);
+  }
+}
+
+@keyframes heroFloatOrb {
+  0% {
+    transform: translate3d(0, 14px, 0) scale(0.85);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.55;
+  }
+}
+
+.animate-hero-stage {
+  animation: heroStageEntrance 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-hero-eita {
+  animation: heroEitaReveal 1.15s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+}
+
+.animate-hero-cta-1 {
+  animation: heroCtaReveal 0.78s cubic-bezier(0.16, 1, 0.3, 1) 0.52s both;
+}
+
+.animate-hero-cta-2 {
+  animation: heroCtaReveal 0.78s cubic-bezier(0.16, 1, 0.3, 1) 0.68s both;
+}
+
+.animate-hero-shine {
+  animation: heroShineSweep 1.35s cubic-bezier(0.22, 1, 0.36, 1) 0.95s 1 both;
+}
+
+.animate-hero-spotlight {
+  animation: heroSpotlightPulse 1.4s ease-out 0.2s 1 both;
+}
+
+.animate-hero-orb-1 {
+  animation: heroFloatOrb 1.2s ease-out 0.4s 1 both;
+}
+
+.animate-hero-orb-2 {
+  animation: heroFloatOrb 1.2s ease-out 0.6s 1 both;
+}
+
+.animate-hero-orb-3 {
+  animation: heroFloatOrb 1.2s ease-out 0.8s 1 both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

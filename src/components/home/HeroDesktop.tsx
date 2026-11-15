@@ -69,13 +69,16 @@ export function HeroDesktop({
           />
         )}
 
-        {/* Véu atmosférico cinza-claro sobre o vídeo de fundo para alto contraste */}
+        {/* Véu atmosférico cinza-claro sobre o vídeo de fundo */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(246,247,250,0.52)_0%,rgba(234,236,241,0.80)_62%,rgba(218,222,230,0.93)_100%)]" />
+
+        {/* Aura dourada sutil de palco (estática após surgir na abertura) */}
+        <div className="animate-hero-spotlight absolute left-[28%] top-[18%] h-[420px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(239,193,107,0.24)_0%,rgba(239,193,107,0)_70%)] blur-2xl" />
       </div>
 
-      {/* Container central proporcional à arte recortada (1199x1144), cabendo 100% dentro da primeira dobra */}
-      <div className="relative z-10 mx-auto h-[calc(100svh-90px)] max-h-[860px] w-auto max-w-[94vw] aspect-[1199/1144] select-none">
-        {/* Camada 1: Foto enviada posicionada dentro das letras EITA (sem vídeo dentro das letras) */}
+      {/* Container central com animação única de entrada na abertura (sem movimento de mouse) */}
+      <div className="animate-hero-stage relative z-10 mx-auto h-[calc(100svh-90px)] max-h-[860px] w-auto max-w-[94vw] aspect-[1199/1144] select-none">
+        {/* Camada 1: Foto interna nas letras EITA 100% estática + feixe único de brilho na abertura */}
         <div
           style={EITA_MASK_STYLE}
           className="pointer-events-none absolute left-[28.6%] top-[21.85%] z-10 h-[37.85%] w-[67.7%] overflow-hidden bg-[#181416]"
@@ -89,9 +92,12 @@ export function HeroDesktop({
             sizes="760px"
             className="object-cover object-center"
           />
+
+          {/* Feixe de luz dourada que atravessa as letras EITA uma única vez no carregamento */}
+          <div className="animate-hero-shine pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-[#FFF3C4]/30 to-transparent" />
         </div>
 
-        {/* Camada 2: Arte principal com Jojo Mendes apoiada sobre o E, vãos de EITA sólidos e CANTIGA! em ouro */}
+        {/* Camada 2: Arte principal com Jojo Mendes apoiada sobre o E e CANTIGA! em ouro */}
         <Image
           src="/media/jojo/hero-desktop-frame-v2.png"
           alt="Jojo Mendes — Eita Cantiga!"
@@ -106,20 +112,26 @@ export function HeroDesktop({
           {copy.hero.desktopTaglineLine1} {copy.hero.desktopTaglineLine2}
         </p>
 
-        {/* Camada 3: Botões interativos na base direita */}
+        {/* Camada 3: Botões interativos que se revelam em sequência na abertura */}
         <div className="absolute left-[29.0%] right-[13.5%] bottom-[2.2%] z-30 flex items-center justify-center gap-3 2xl:gap-4">
           <Link
             href={destinations.booking}
-            className="group inline-flex h-[44px] 2xl:h-[52px] flex-1 items-center justify-center gap-2.5 rounded-pill bg-gradient-to-b from-[#FAE084] via-[#EBB338] to-[#CE8814] px-5 2xl:px-7 text-[15px] 2xl:text-[17px] font-bold text-[#111115] shadow-[0_8px_20px_rgba(206,136,20,0.32)] transition-all duration-150 ease-out hover:brightness-105 hover:-translate-y-0.5 active:scale-[0.99]"
+            className="animate-hero-cta-1 group relative inline-flex h-[44px] 2xl:h-[52px] flex-1 items-center justify-center gap-2.5 overflow-hidden rounded-pill bg-gradient-to-b from-[#FAE084] via-[#EBB338] to-[#CE8814] px-5 2xl:px-7 text-[15px] 2xl:text-[17px] font-bold text-[#111115] shadow-[0_8px_24px_rgba(206,136,20,0.38)] transition-all duration-200 ease-out hover:brightness-105 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(235,179,56,0.5)] active:scale-[0.98]"
           >
+            <span
+              aria-hidden="true"
+              className="animate-hero-shine pointer-events-none absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white/55 to-transparent"
+            />
             <CalendarDays
-              className="h-4 w-4 2xl:h-5 2xl:w-5 shrink-0 text-[#111115]"
+              className="relative z-10 h-4 w-4 2xl:h-5 2xl:w-5 shrink-0 text-[#111115]"
               strokeWidth={2}
               aria-hidden="true"
             />
-            <span className="whitespace-nowrap">{copy.hero.primaryCta}</span>
+            <span className="relative z-10 whitespace-nowrap">
+              {copy.hero.primaryCta}
+            </span>
             <ArrowRight
-              className="h-4 w-4 2xl:h-5 2xl:w-5 shrink-0 text-[#111115] transition-transform duration-150 group-hover:translate-x-1"
+              className="relative z-10 h-4 w-4 2xl:h-5 2xl:w-5 shrink-0 text-[#111115] transition-transform duration-200 group-hover:translate-x-1"
               strokeWidth={2}
               aria-hidden="true"
             />
@@ -127,10 +139,10 @@ export function HeroDesktop({
 
           <Link
             href={destinations.schedule}
-            className="group inline-flex h-[44px] 2xl:h-[52px] flex-1 items-center justify-center gap-2.5 rounded-pill border border-[#1A1A22]/75 bg-white/55 px-5 2xl:px-7 text-[15px] 2xl:text-[17px] font-semibold text-[#111115] backdrop-blur-sm transition-all duration-150 ease-out hover:border-[#111115] hover:bg-[#111115] hover:text-[#FAF7F1] active:scale-[0.99]"
+            className="animate-hero-cta-2 group inline-flex h-[44px] 2xl:h-[52px] flex-1 items-center justify-center gap-2.5 rounded-pill border border-[#1A1A22]/75 bg-white/60 px-5 2xl:px-7 text-[15px] 2xl:text-[17px] font-semibold text-[#111115] backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[#111115] hover:bg-[#111115] hover:text-[#FAF7F1] active:scale-[0.98]"
           >
             <PlayCircle
-              className="h-4 w-4 2xl:h-5 2xl:w-5 shrink-0 text-current transition-transform duration-150 group-hover:scale-105"
+              className="h-4 w-4 2xl:h-5 2xl:w-5 shrink-0 text-current transition-transform duration-200 group-hover:scale-105"
               strokeWidth={2}
               aria-hidden="true"
             />
