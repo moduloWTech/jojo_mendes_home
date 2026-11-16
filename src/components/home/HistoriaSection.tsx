@@ -57,7 +57,18 @@ export function HistoriaSection() {
         />
       </div>
 
-      {/* Espaço da dobra (limpo de textos/informações por enquanto, conforme solicitado para avaliação visual) */}
+      {/* =====================================================================
+          CAMADA ESCURA SEMITRANSPARENTE (OVERLAY DE CONTRASTE):
+          - Fica sobre a imagem de background (z-[5])
+          - Proporciona contraste perfeito para leitura de textos e títulos
+          - Mantém a imagem fotográfica e o efeito parallax visíveis ao fundo
+         ===================================================================== */}
+      <div
+        className="pointer-events-none absolute inset-0 z-[5] bg-[#08070A]/65 backdrop-blur-[0.5px]"
+        aria-hidden="true"
+      />
+
+      {/* Espaço da dobra preparado para receber os conteúdos e informações */}
       <div className="relative z-10 min-h-[100svh] w-full flex items-center justify-center pointer-events-none" />
     </section>
   );
