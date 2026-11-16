@@ -71,3 +71,11 @@ export type BiographyContent = {
   };
 };
 
+export type ArtistStoryChapter = {
+  id: number;
+  chapter: string;
+  badge: string;
+  title: string;
+  text: string;
+};
+

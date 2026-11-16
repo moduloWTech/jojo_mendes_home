@@ -1,4 +1,5 @@
 import type {
+  ArtistStoryChapter,
   ArtistVideo,
   BiographyContent,
   GalleryImage,
@@ -80,6 +81,40 @@ export const biography: BiographyContent = {
     positionDesktop: 'center top',
   },
 };
+
+/**
+ * Capítulos autobiográficos da artista (#historia), revelados sequencialmente no scroll.
+ */
+export const artistStoryChapters: ArtistStoryChapter[] = [
+  {
+    id: 1,
+    chapter: '01',
+    badge: 'A Infância & As Raízes',
+    title: 'Onde a cantiga começou',
+    text: 'Comecei cantando na escola e já sentia que a música era o meu caminho. Eu vivia com o violão no colo, ouvindo os clássicos e sonhando com o dia em que subiria em grandes palcos para levar a minha cantiga pro mundo.',
+  },
+  {
+    id: 2,
+    chapter: '02',
+    badge: 'A Estrada & O Palco',
+    title: 'A primeira banda',
+    text: 'A primeira banda que eu montei foi onde tudo virou realidade. Ensaios até a madrugada, van na estrada e o aprendizado de segurar o público no peito. Foi ali que entendi que o palco é a minha verdadeira casa.',
+  },
+  {
+    id: 3,
+    chapter: '03',
+    badge: 'Os Encontros Marcantes',
+    title: 'Gente especial na caminhada',
+    text: 'Já toquei com muita gente especial que me moldou como artista. Cada mestre, cada músico que cruzou o meu caminho deixou um pedaço de si no meu som. É essa troca verdadeira que faz a música nordestina ser tão rica.',
+  },
+  {
+    id: 4,
+    chapter: '04',
+    badge: 'A Entrega Total',
+    title: 'Tudo de mim em cada show',
+    text: 'Pra mim não importa o tamanho do público: se tiver dez ou dez mil pessoas, a entrega é exatamente a mesma. Em cada show eu deixo o meu suor, minha voz e toda a minha alma no palco.',
+  },
+];
 
 /**
  * Agenda de shows (#agenda).
