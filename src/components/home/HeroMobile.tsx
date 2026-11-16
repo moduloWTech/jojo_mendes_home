@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 
 interface HeroMobileProps {
   isRevealed?: boolean;
+  scrollProgress?: number;
 }
 
 const EITA_MASK_STYLE: React.CSSProperties = {
@@ -22,59 +23,109 @@ const EITA_MASK_STYLE: React.CSSProperties = {
   maskPosition: 'center',
 };
 
-export function HeroMobile({ isRevealed = true }: HeroMobileProps) {
+export function HeroMobile({
+  isRevealed = true,
+  scrollProgress = 0,
+}: HeroMobileProps) {
+  // A separação ocorre nos primeiros 65% do scroll da dobra fixa
+  const rawSplit = Math.min(Math.max(scrollProgress / 0.65, 0), 1);
+  // Curva cúbica suave (easeOutCubic)
+  const splitProgress = 1 - Math.pow(1 - rawSplit, 3);
+
+  // Deslocamento horizontal no mobile
+  const leftShiftPct = splitProgress * 115;
+  const rightShiftPct = splitProgress * 115;
+  const artworkOpacity =
+    rawSplit > 0.65 ? Math.max(0, 1 - (rawSplit - 0.65) / 0.3) : 1;
+
+  // Deslocamento dos botões (um para esquerda e outro para direita)
+  const btnShiftVw = splitProgress * 120;
+  const btnOpacity =
+    rawSplit > 0.55 ? Math.max(0, 1 - (rawSplit - 0.55) / 0.3) : 1;
+
   return (
     <div
       data-testid="hero-mobile"
       className="relative z-10 flex h-[100svh] max-h-[100svh] w-full flex-col items-center justify-between overflow-hidden px-4 pt-[72px] pb-[max(20px,calc(env(safe-area-inset-bottom)+14px))] xl:hidden"
     >
-      {/* Bloco central com animação de entrada quando a abertura termina */}
+      {/* Bloco central com separação horizontal em scroll */}
       <div
         className={cn(
           'relative my-auto w-full max-w-[370px] sm:max-w-[430px] max-h-[calc(100svh-228px)] aspect-[1199/1144] select-none',
           isRevealed ? 'animate-hero-stage' : 'opacity-0'
         )}
       >
-        {/* Camada 1: Foto solo da Jojo dentro das letras EITA 100% travada na posição exata */}
+        {/* Camada Esquerda: Cantora apoiada + Letras EITA (desloca para a ESQUERDA no scroll) */}
         <div
-          style={EITA_MASK_STYLE}
-          className="pointer-events-none absolute left-[28.6%] top-[21.85%] z-10 h-[37.85%] w-[67.7%] overflow-hidden bg-[#181416]"
-          aria-hidden="true"
+          style={{
+            transform: `translate3d(-${leftShiftPct}%, 0, 0)`,
+            opacity: artworkOpacity,
+          }}
+          className="pointer-events-none absolute inset-0 z-20 will-change-transform"
         >
+          {/* Foto solo da Jojo dentro das letras EITA */}
+          <div
+            style={EITA_MASK_STYLE}
+            className="pointer-events-none absolute left-[28.6%] top-[21.85%] z-10 h-[37.85%] w-[67.7%] overflow-hidden bg-[#181416]"
+            aria-hidden="true"
+          >
+            <Image
+              src="/media/jojo/hero-desktop-eita-solo-v3.jpg"
+              alt=""
+              fill
+              priority
+              sizes="(max-width: 767px) 70vw, 320px"
+              className="object-cover object-center"
+            />
+            {isRevealed && (
+              <div className="animate-hero-shine pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-[#FFF3C4]/30 to-transparent" />
+            )}
+          </div>
+
+          {/* Recorte da Jojo apoiada no E e moldura do EITA */}
           <Image
-            src="/media/jojo/hero-desktop-eita-solo-v3.jpg"
-            alt=""
+            src="/media/jojo/hero-split-jojo-eita.png"
+            alt="Jojo Mendes — Eita"
             fill
             priority
-            sizes="(max-width: 767px) 70vw, 320px"
-            className="object-cover object-center"
+            sizes="(max-width: 767px) 92vw, 430px"
+            className="pointer-events-none relative z-20 object-contain"
           />
-          {isRevealed && (
-            <div className="animate-hero-shine pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-[#FFF3C4]/30 to-transparent" />
-          )}
         </div>
 
-        {/* Camada 2: Arte principal com Jojo Mendes (camisa com logo oficial), mão sobre o E e CANTIGA! em ouro */}
-        <Image
-          src="/media/jojo/hero-desktop-frame-v2.png"
-          alt="Jojo Mendes — Eita Cantiga!"
-          fill
-          priority
-          sizes="(max-width: 767px) 92vw, 430px"
-          className="pointer-events-none relative z-20 object-contain"
-        />
+        {/* Camada Direita: Palavra CANTIGA! em ouro + Frase (desloca para a DIREITA no scroll) */}
+        <div
+          style={{
+            transform: `translate3d(${rightShiftPct}%, 0, 0)`,
+            opacity: artworkOpacity,
+          }}
+          className="pointer-events-none absolute inset-0 z-10 will-change-transform"
+        >
+          <Image
+            src="/media/jojo/hero-split-cantiga.png"
+            alt="Cantiga!"
+            fill
+            priority
+            sizes="(max-width: 767px) 92vw, 430px"
+            className="pointer-events-none object-contain"
+          />
+        </div>
 
         <p className="sr-only">
           {copy.hero.desktopTaglineLine1} {copy.hero.desktopTaglineLine2}
         </p>
       </div>
 
-      {/* Bloco inferior: Os 2 CTAs empilhados com revelação sequencial após a transição */}
+      {/* Bloco inferior: Os 2 CTAs empilhados se separando no scroll */}
       <div className="relative z-30 flex w-full max-w-[350px] sm:max-w-[380px] flex-col gap-2.5">
         <Link
           href={destinations.booking}
+          style={{
+            transform: `translate3d(-${btnShiftVw}vw, 0, 0)`,
+            opacity: btnOpacity,
+          }}
           className={cn(
-            'group relative inline-flex min-h-[48px] w-full items-center justify-center gap-2.5 overflow-hidden rounded-pill bg-gradient-to-b from-[#FAE084] via-[#EBB338] to-[#CE8814] px-6 text-[16px] font-bold text-[#111115] shadow-[0_8px_20px_rgba(206,136,20,0.35)] transition-all duration-150 ease-out active:scale-[0.98]',
+            'group relative inline-flex min-h-[48px] w-full items-center justify-center gap-2.5 overflow-hidden rounded-pill bg-gradient-to-b from-[#FAE084] via-[#EBB338] to-[#CE8814] px-6 text-[16px] font-bold text-[#111115] shadow-[0_8px_20px_rgba(206,136,20,0.35)] transition-all duration-150 ease-out active:scale-[0.98] will-change-transform',
             isRevealed ? 'animate-hero-cta-1' : 'opacity-0'
           )}
         >
@@ -99,8 +150,12 @@ export function HeroMobile({ isRevealed = true }: HeroMobileProps) {
 
         <Link
           href={destinations.schedule}
+          style={{
+            transform: `translate3d(${btnShiftVw}vw, 0, 0)`,
+            opacity: btnOpacity,
+          }}
           className={cn(
-            'group inline-flex min-h-[48px] w-full items-center justify-center gap-2.5 rounded-pill border border-[#1A1A22]/75 bg-white/65 px-6 text-[16px] font-semibold text-[#111115] backdrop-blur-sm transition-all duration-150 ease-out active:scale-[0.98]',
+            'group inline-flex min-h-[48px] w-full items-center justify-center gap-2.5 rounded-pill border border-[#1A1A22]/75 bg-white/65 px-6 text-[16px] font-semibold text-[#111115] backdrop-blur-sm transition-all duration-150 ease-out active:scale-[0.98] will-change-transform',
             isRevealed ? 'animate-hero-cta-2' : 'opacity-0'
           )}
         >

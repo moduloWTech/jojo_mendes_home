@@ -13,6 +13,7 @@ interface HeroDesktopProps {
   videoSrc: string | null;
   onVideoError: () => void;
   isRevealed?: boolean;
+  scrollProgress?: number;
 }
 
 const EITA_MASK_STYLE: React.CSSProperties = {
@@ -31,13 +32,30 @@ export function HeroDesktop({
   videoSrc,
   onVideoError,
   isRevealed = true,
+  scrollProgress = 0,
 }: HeroDesktopProps) {
+  // A separação ocorre nos primeiros 65% do scroll da dobra fixa
+  const rawSplit = Math.min(Math.max(scrollProgress / 0.65, 0), 1);
+  // Curva cúbica suave (easeOutCubic)
+  const splitProgress = 1 - Math.pow(1 - rawSplit, 3);
+
+  // Deslocamento horizontal em porcentagem da largura do container
+  const leftShiftPct = splitProgress * 115;
+  const rightShiftPct = splitProgress * 115;
+  const artworkOpacity =
+    rawSplit > 0.65 ? Math.max(0, 1 - (rawSplit - 0.65) / 0.3) : 1;
+
+  // Deslocamento dos botões (um para esquerda e outro para direita)
+  const btnShiftPct = splitProgress * 155;
+  const btnOpacity =
+    rawSplit > 0.55 ? Math.max(0, 1 - (rawSplit - 0.55) / 0.3) : 1;
+
   return (
     <div
       data-testid="hero-desktop"
       className="relative z-10 hidden h-[100svh] max-h-[100svh] w-full items-center justify-center overflow-hidden bg-[#ECEEF2] pt-[76px] pb-3 xl:flex"
     >
-      {/* Camada 0 (Full-Screen): Vídeo jojo_init_site.mp4 rodando exclusivamente no background com filtro cinza-claro */}
+      {/* Camada 0 (Full-Screen): Vídeo de background com filtro cinza-claro */}
       <div
         className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
         aria-hidden="true"
@@ -84,55 +102,86 @@ export function HeroDesktop({
         />
       </div>
 
-      {/* Container central: dispara a animação de entrada exatamente quando a abertura cinematográfica faz a transição */}
+      {/* Container central da arte */}
       <div
         className={cn(
           'relative z-10 mx-auto h-[calc(100svh-90px)] max-h-[860px] w-auto max-w-[94vw] aspect-[1199/1144] select-none',
           isRevealed ? 'animate-hero-stage' : 'opacity-0'
         )}
       >
-        {/* Camada 1: Foto interna nas letras EITA 100% estática + feixe único de brilho quando a Hero entra */}
+        {/* Camada Esquerda: Cantora apoiada + Letras EITA (desloca para a ESQUERDA no scroll) */}
         <div
-          style={EITA_MASK_STYLE}
-          className="pointer-events-none absolute left-[28.6%] top-[21.85%] z-10 h-[37.85%] w-[67.7%] overflow-hidden bg-[#181416]"
-          aria-hidden="true"
+          style={{
+            transform: `translate3d(-${leftShiftPct}%, 0, 0)`,
+            opacity: artworkOpacity,
+          }}
+          className="pointer-events-none absolute inset-0 z-20 will-change-transform"
         >
+          {/* Foto interna nas letras EITA (100% alinhada à máscara e acompanha o deslocamento) */}
+          <div
+            style={EITA_MASK_STYLE}
+            className="pointer-events-none absolute left-[28.6%] top-[21.85%] z-10 h-[37.85%] w-[67.7%] overflow-hidden bg-[#181416]"
+            aria-hidden="true"
+          >
+            <Image
+              src="/media/jojo/hero-desktop-eita-solo-v3.jpg"
+              alt=""
+              fill
+              priority
+              sizes="760px"
+              className="object-cover object-center"
+            />
+
+            {/* Feixe de luz dourada inicial */}
+            {isRevealed && (
+              <div className="animate-hero-shine pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-[#FFF3C4]/30 to-transparent" />
+            )}
+          </div>
+
+          {/* Recorte da Jojo apoiada no E e moldura do EITA */}
           <Image
-            src="/media/jojo/hero-desktop-eita-solo-v3.jpg"
-            alt=""
+            src="/media/jojo/hero-split-jojo-eita.png"
+            alt="Jojo Mendes — Eita"
             fill
             priority
-            sizes="760px"
-            className="object-cover object-center"
+            sizes="(min-width: 1280px) 85vh, 100vw"
+            className="pointer-events-none relative z-20 object-contain"
           />
-
-          {/* Feixe de luz dourada que atravessa as letras EITA uma única vez após a transição */}
-          {isRevealed && (
-            <div className="animate-hero-shine pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-[#FFF3C4]/30 to-transparent" />
-          )}
         </div>
 
-        {/* Camada 2: Arte principal com Jojo Mendes apoiada sobre o E e CANTIGA! em ouro */}
-        <Image
-          src="/media/jojo/hero-desktop-frame-v2.png"
-          alt="Jojo Mendes — Eita Cantiga!"
-          fill
-          priority
-          sizes="(min-width: 1280px) 85vh, 100vw"
-          className="pointer-events-none relative z-20 object-contain"
-        />
+        {/* Camada Direita: Palavra CANTIGA! em ouro + Frase (desloca para a DIREITA no scroll) */}
+        <div
+          style={{
+            transform: `translate3d(${rightShiftPct}%, 0, 0)`,
+            opacity: artworkOpacity,
+          }}
+          className="pointer-events-none absolute inset-0 z-10 will-change-transform"
+        >
+          <Image
+            src="/media/jojo/hero-split-cantiga.png"
+            alt="Cantiga!"
+            fill
+            priority
+            sizes="(min-width: 1280px) 85vh, 100vw"
+            className="pointer-events-none object-contain"
+          />
+        </div>
 
         {/* Texto semântico para leitores de tela */}
         <p className="sr-only">
           {copy.hero.desktopTaglineLine1} {copy.hero.desktopTaglineLine2}
         </p>
 
-        {/* Camada 3: Botões interativos que se revelam em sequência assim que a Hero entra */}
+        {/* Camada dos Botões: se separam no scroll (Agendar para a esquerda, Ver agenda para a direita) */}
         <div className="absolute left-[29.0%] right-[13.5%] bottom-[2.2%] z-30 flex items-center justify-center gap-3 2xl:gap-4">
           <Link
             href={destinations.booking}
+            style={{
+              transform: `translate3d(-${btnShiftPct}%, 0, 0)`,
+              opacity: btnOpacity,
+            }}
             className={cn(
-              'group relative inline-flex h-[44px] 2xl:h-[52px] flex-1 items-center justify-center gap-2.5 overflow-hidden rounded-pill bg-gradient-to-b from-[#FAE084] via-[#EBB338] to-[#CE8814] px-5 2xl:px-7 text-[15px] 2xl:text-[17px] font-bold text-[#111115] shadow-[0_8px_24px_rgba(206,136,20,0.38)] transition-all duration-200 ease-out hover:brightness-105 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(235,179,56,0.5)] active:scale-[0.98]',
+              'group relative inline-flex h-[44px] 2xl:h-[52px] flex-1 items-center justify-center gap-2.5 overflow-hidden rounded-pill bg-gradient-to-b from-[#FAE084] via-[#EBB338] to-[#CE8814] px-5 2xl:px-7 text-[15px] 2xl:text-[17px] font-bold text-[#111115] shadow-[0_8px_24px_rgba(206,136,20,0.38)] transition-all duration-200 ease-out hover:brightness-105 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(235,179,56,0.5)] active:scale-[0.98] will-change-transform',
               isRevealed ? 'animate-hero-cta-1' : 'opacity-0'
             )}
           >
@@ -159,8 +208,12 @@ export function HeroDesktop({
 
           <Link
             href={destinations.schedule}
+            style={{
+              transform: `translate3d(${btnShiftPct}%, 0, 0)`,
+              opacity: btnOpacity,
+            }}
             className={cn(
-              'group inline-flex h-[44px] 2xl:h-[52px] flex-1 items-center justify-center gap-2.5 rounded-pill border border-[#1A1A22]/75 bg-white/60 px-5 2xl:px-7 text-[15px] 2xl:text-[17px] font-semibold text-[#111115] backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[#111115] hover:bg-[#111115] hover:text-[#FAF7F1] active:scale-[0.98]',
+              'group inline-flex h-[44px] 2xl:h-[52px] flex-1 items-center justify-center gap-2.5 rounded-pill border border-[#1A1A22]/75 bg-white/60 px-5 2xl:px-7 text-[15px] 2xl:text-[17px] font-semibold text-[#111115] backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[#111115] hover:bg-[#111115] hover:text-[#FAF7F1] active:scale-[0.98] will-change-transform',
               isRevealed ? 'animate-hero-cta-2' : 'opacity-0'
             )}
           >

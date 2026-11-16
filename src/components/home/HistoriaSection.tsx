@@ -10,7 +10,7 @@ export function HistoriaSection() {
     <section
       id="historia"
       aria-labelledby="historia-heading"
-      className="section-spacing bg-bg"
+      className="relative z-20 section-spacing bg-bg shadow-[0_-28px_60px_rgba(10,10,14,0.35)]"
     >
       <Container>
         <RevealOnScroll>
