@@ -71,6 +71,14 @@ describe('Jojo Mendes — Critérios de Aceite da Home e Contratação', () => {
     expect(iframe?.getAttribute('src')).toContain('youtube-nocookie.com/embed/');
   });
 
+  it('Avança o vídeo ativo ao clicar na seta Próximo vídeo', async () => {
+    const user = userEvent.setup();
+    render(<VideosSection />);
+    const nextButtons = screen.getAllByRole('button', { name: /próximo vídeo/i });
+    await user.click(nextButtons[0]!);
+    expect(screen.getByText(/02\/06/)).toBeInTheDocument();
+  });
+
   it('Galeria possui nomes acessíveis "Abrir foto [n] da galeria" e abre Lightbox ao clicar', async () => {
     const user = userEvent.setup();
     render(<GaleriaSection />);

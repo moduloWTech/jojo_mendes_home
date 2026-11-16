@@ -79,9 +79,9 @@ export function VideosSection({ items = defaultVideos }: VideosSectionProps) {
     const endX = e.changedTouches[0]?.clientX ?? null;
     if (endX === null) return;
     const diff = touchStartX.current - endX;
-    if (diff > 45) {
+    if (diff > 40) {
       handleNext();
-    } else if (diff < -45) {
+    } else if (diff < -40) {
       handlePrev();
     }
     touchStartX.current = null;
@@ -145,7 +145,7 @@ export function VideosSection({ items = defaultVideos }: VideosSectionProps) {
         aria-hidden="true"
       />
 
-      <Container className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6">
+      <Container className="relative z-10 w-full max-w-6xl mx-auto px-3 sm:px-6">
         
         {/* ===================================================================
             CABEÇALHO EDITORIAL ESTILO SPOTIFY / JBL
@@ -177,207 +177,226 @@ export function VideosSection({ items = defaultVideos }: VideosSectionProps) {
           </h2>
 
           <p className="text-xs sm:text-sm text-white/60 font-sans mt-2 max-w-lg">
-            Clique nos cards, use as setas laterais ou o player abaixo para assistir aos vídeos.
+            Use as setas para trocar de vídeo ou clique no card central para dar o play.
           </p>
         </div>
 
         {/* ===================================================================
-            3D COVER FLOW REAL COM NAVEGAÇÃO INTERATIVA
+            3D COVER FLOW REAL COM NAVEGAÇÃO LATERAL POR SETAS
            =================================================================== */}
-        <div
-          className="relative w-full max-w-4xl mx-auto h-[320px] sm:h-[370px] md:h-[410px] my-2"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          style={{ perspective: '1100px' }}
-        >
-          {items.map((video, index) => {
-            const half = Math.floor(total / 2);
-            let offset = (((index - selectedIndex + total + half) % total) - half);
-
-            if (total === 2 && offset === 1 && index < selectedIndex) {
-              offset = -1;
-            }
-
-            const isActive = offset === 0;
-            const isLeft = offset === -1;
-            const isRight = offset === 1;
-            const isFarLeft = offset < -1;
-            const isFarRight = offset > 1;
-
-            let transform = 'translate(-50%, -50%) translateZ(80px) rotateY(0deg) scale(1)';
-            let zIndex = 30;
-            let opacity = 1;
-            let filter = 'blur(0px)';
-
-            if (isActive) {
-              transform = 'translate(-50%, -50%) translateZ(90px) rotateY(0deg) scale(1)';
-              zIndex = 30;
-              opacity = 1;
-              filter = 'blur(0px)';
-            } else if (isLeft) {
-              transform =
-                'translate(-125%, -50%) translateZ(0px) rotateY(26deg) scale(0.85)';
-              zIndex = 20;
-              opacity = 0.7;
-              filter = 'blur(0.5px)';
-            } else if (isRight) {
-              transform =
-                'translate(25%, -50%) translateZ(0px) rotateY(-26deg) scale(0.85)';
-              zIndex = 20;
-              opacity = 0.7;
-              filter = 'blur(0.5px)';
-            } else if (isFarLeft) {
-              transform =
-                'translate(-180%, -50%) translateZ(-90px) rotateY(38deg) scale(0.72)';
-              zIndex = 10;
-              opacity = 0.35;
-              filter = 'blur(1px)';
-            } else if (isFarRight) {
-              transform =
-                'translate(80%, -50%) translateZ(-90px) rotateY(-38deg) scale(0.72)';
-              zIndex = 10;
-              opacity = 0.35;
-              filter = 'blur(1px)';
-            }
-
-            const thumbUrl = `https://i.ytimg.com/vi/${encodeURIComponent(
-              video.youtubeId
-            )}/hqdefault.jpg`;
-            const isThumbFailed = thumbErrors[video.id];
-            const coverImage = isThumbFailed
-              ? (FALLBACK_COVERS[index % FALLBACK_COVERS.length] ?? '/media/jojo/foto-palco-noite.jpeg')
-              : thumbUrl;
-
-            return (
-              <div
-                key={video.id}
-                style={{
-                  transform,
-                  zIndex,
-                  opacity,
-                  filter,
-                  transition:
-                    'transform 500ms cubic-bezier(0.22, 1, 0.36, 1), opacity 500ms ease, filter 500ms ease',
-                }}
-                className={`absolute top-1/2 left-1/2 w-[220px] sm:w-[260px] md:w-[290px] h-[280px] sm:h-[330px] md:h-[360px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.85)] ${
-                  isActive
-                    ? 'border-2 border-[#EFC16B] shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(239,193,107,0.35)] ring-1 ring-white/30'
-                    : 'border border-white/15 hover:opacity-100 hover:border-white/40'
-                }`}
-              >
-                {/* Se ativo e em reprodução: exibe o iframe do YouTube */}
-                {isActive && isPlaying ? (
-                  <div className="relative h-full w-full bg-black">
-                    <iframe
-                      key={video.youtubeId}
-                      src={embedUrl}
-                      title={video.title}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                      className="h-full w-full border-0"
-                    />
-                    {/* Botão para fechar a reprodução e voltar para a capa */}
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsPlaying(false);
-                      }}
-                      aria-label="Fechar vídeo"
-                      className="absolute top-2 right-2 z-30 flex h-8 w-8 items-center justify-center rounded-full bg-black/80 border border-white/20 text-white hover:bg-black transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-                ) : (
-                  /* Botão interativo que cobre todo o card */
-                  <button
-                    type="button"
-                    onClick={() => handleSelect(index)}
-                    aria-label={
-                      isActive
-                        ? `${copy.videos.playButtonLabel}: ${video.title}`
-                        : `Ver vídeo ${index + 1}: ${video.title}`
-                    }
-                    className="relative h-full w-full group text-left cursor-pointer focus-visible:outline-none"
-                  >
-                    <Image
-                      src={coverImage}
-                      alt={video.title}
-                      fill
-                      sizes="(max-width: 640px) 240px, 300px"
-                      onError={() =>
-                        setThumbErrors((prev) => ({
-                          ...prev,
-                          [video.id]: true,
-                        }))
-                      }
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      priority={isActive}
-                    />
-
-                    {/* Gradiente escuro para legibilidade */}
-                    <div
-                      className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-black/20"
-                      aria-hidden="true"
-                    />
-
-                    {/* Badge de vídeo demonstrativo quando aplicável */}
-                    {video.isDemo && (
-                      <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10">
-                        <span className="rounded-full bg-black/80 border border-[#EFC16B]/60 px-2.5 py-1 text-[9px] sm:text-[10px] font-semibold text-[#EFC16B] backdrop-blur-md shadow-md">
-                          {copy.videos.demoBadge}
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Botão de Play Central */}
-                    {isActive && (
-                      <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                        <span className="relative flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-[#EFC16B] text-black shadow-[0_0_25px_rgba(239,193,107,0.4)] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#FAF7F1]">
-                          <Play
-                            className="h-6 w-6 sm:h-7 sm:w-7 fill-current translate-x-0.5"
-                            strokeWidth={2}
-                            aria-hidden="true"
-                          />
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Informações da Capa do Álbum */}
-                    <div className="absolute bottom-0 inset-x-0 p-4 z-10 text-center">
-                      <p className="text-[10px] text-[#EFC16B] font-mono uppercase tracking-wider font-semibold">
-                        Jojo Mendes · Faixa 0{index + 1}
-                      </p>
-                      <h3 className="font-display text-sm sm:text-base font-bold text-white truncate drop-shadow-md mt-0.5">
-                        {video.title}
-                      </h3>
-                      <p className="text-[10px] text-white/50 font-sans mt-0.5">
-                        {isActive ? 'Clique para assistir' : 'Clique para selecionar'}
-                      </p>
-                    </div>
-                  </button>
-                )}
-              </div>
-            );
-          })}
-
-          {/* Setas flutuantes nas laterais para avançar/voltar com 1 clique */}
+        <div className="relative w-full max-w-5xl mx-auto flex items-center justify-between gap-1 sm:gap-4 my-2">
+          
+          {/* Seta Esquerda Flutuante (posicionada fora do contexto 3D para clique imediato) */}
           <button
             type="button"
             onClick={handlePrev}
             aria-label="Vídeo anterior"
-            className="absolute -left-2 sm:left-2 top-1/2 -translate-y-1/2 z-40 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-black/75 border border-white/20 text-white backdrop-blur-md hover:bg-black hover:border-[#EFC16B] hover:text-[#EFC16B] hover:scale-110 transition-all shadow-xl focus-visible:outline-none"
+            className="z-50 flex h-11 w-11 sm:h-13 sm:w-13 shrink-0 items-center justify-center rounded-full bg-black/85 border border-[#EFC16B]/60 text-[#EFC16B] hover:bg-[#EFC16B] hover:text-black hover:scale-110 active:scale-95 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.9)] focus-visible:outline-none cursor-pointer"
           >
-            <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+            <ChevronLeft className="h-6 w-6" strokeWidth={2.5} />
           </button>
+
+          {/* Contêiner de Perspectiva 3D */}
+          <div
+            className="relative flex-1 h-[320px] sm:h-[370px] md:h-[410px] overflow-visible"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            style={{ perspective: '1100px' }}
+          >
+            {items.map((video, index) => {
+              const half = Math.floor(total / 2);
+              let offset = (((index - selectedIndex + total + half) % total) - half);
+
+              if (total === 2 && offset === 1 && index < selectedIndex) {
+                offset = -1;
+              }
+
+              const isActive = offset === 0;
+              const isLeft = offset === -1;
+              const isRight = offset === 1;
+              const isFarLeft = offset < -1;
+              const isFarRight = offset > 1;
+
+              let transform = 'translate(-50%, -50%) translateZ(80px) rotateY(0deg) scale(1)';
+              let zIndex = 30;
+              let opacity = 1;
+              let filter = 'blur(0px)';
+
+              if (isActive) {
+                transform = 'translate(-50%, -50%) translateZ(90px) rotateY(0deg) scale(1)';
+                zIndex = 30;
+                opacity = 1;
+                filter = 'blur(0px)';
+              } else if (isLeft) {
+                transform =
+                  'translate(-125%, -50%) translateZ(0px) rotateY(26deg) scale(0.85)';
+                zIndex = 20;
+                opacity = 0.7;
+                filter = 'blur(0.5px)';
+              } else if (isRight) {
+                transform =
+                  'translate(25%, -50%) translateZ(0px) rotateY(-26deg) scale(0.85)';
+                zIndex = 20;
+                opacity = 0.7;
+                filter = 'blur(0.5px)';
+              } else if (isFarLeft) {
+                transform =
+                  'translate(-180%, -50%) translateZ(-90px) rotateY(38deg) scale(0.72)';
+                zIndex = 10;
+                opacity = 0.35;
+                filter = 'blur(1px)';
+              } else if (isFarRight) {
+                transform =
+                  'translate(80%, -50%) translateZ(-90px) rotateY(-38deg) scale(0.72)';
+                zIndex = 10;
+                opacity = 0.35;
+                filter = 'blur(1px)';
+              }
+
+              const thumbUrl = `https://i.ytimg.com/vi/${encodeURIComponent(
+                video.youtubeId
+              )}/hqdefault.jpg`;
+              const isThumbFailed = thumbErrors[video.id];
+              const coverImage = isThumbFailed
+                ? (FALLBACK_COVERS[index % FALLBACK_COVERS.length] ?? '/media/jojo/foto-palco-noite.jpeg')
+                : thumbUrl;
+
+              const handleCardClick = (e: React.MouseEvent) => {
+                e.stopPropagation();
+                if (isActive) {
+                  setIsPlaying(true);
+                } else if (isLeft || isFarLeft) {
+                  handlePrev();
+                } else if (isRight || isFarRight) {
+                  handleNext();
+                } else {
+                  handleSelect(index);
+                }
+              };
+
+              return (
+                <div
+                  key={video.id}
+                  style={{
+                    transform,
+                    zIndex,
+                    opacity,
+                    filter,
+                    transition:
+                      'transform 500ms cubic-bezier(0.22, 1, 0.36, 1), opacity 500ms ease, filter 500ms ease',
+                  }}
+                  className={`absolute top-1/2 left-1/2 w-[220px] sm:w-[260px] md:w-[290px] h-[280px] sm:h-[330px] md:h-[360px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.85)] ${
+                    isActive
+                      ? 'border-2 border-[#EFC16B] shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_35px_rgba(239,193,107,0.35)] ring-1 ring-white/30'
+                      : 'border border-white/15 hover:opacity-100 hover:border-white/40'
+                  }`}
+                >
+                  {/* Se ativo e em reprodução: exibe o iframe do YouTube */}
+                  {isActive && isPlaying ? (
+                    <div className="relative h-full w-full bg-black">
+                      <iframe
+                        key={video.youtubeId}
+                        src={embedUrl}
+                        title={video.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                        className="h-full w-full border-0"
+                      />
+                      {/* Botão para fechar a reprodução e voltar para a capa */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsPlaying(false);
+                        }}
+                        aria-label="Fechar vídeo"
+                        className="absolute top-2 right-2 z-30 flex h-8 w-8 items-center justify-center rounded-full bg-black/80 border border-white/20 text-white hover:bg-black transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    /* Botão de clique cobrindo todo o card */
+                    <button
+                      type="button"
+                      onClick={handleCardClick}
+                      aria-label={
+                        isActive
+                          ? `${copy.videos.playButtonLabel}: ${video.title}`
+                          : `Ver vídeo ${index + 1}: ${video.title}`
+                      }
+                      className="relative h-full w-full group text-left cursor-pointer focus-visible:outline-none"
+                    >
+                      <Image
+                        src={coverImage}
+                        alt={video.title}
+                        fill
+                        sizes="(max-width: 640px) 240px, 300px"
+                        onError={() =>
+                          setThumbErrors((prev) => ({
+                            ...prev,
+                            [video.id]: true,
+                          }))
+                        }
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        priority={isActive}
+                      />
+
+                      {/* Gradiente escuro para legibilidade */}
+                      <div
+                        className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/35 to-black/20"
+                        aria-hidden="true"
+                      />
+
+                      {/* Badge de vídeo demonstrativo quando aplicável */}
+                      {video.isDemo && (
+                        <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10">
+                          <span className="rounded-full bg-black/80 border border-[#EFC16B]/60 px-2.5 py-1 text-[9px] sm:text-[10px] font-semibold text-[#EFC16B] backdrop-blur-md shadow-md">
+                            {copy.videos.demoBadge}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Botão de Play Central */}
+                      {isActive && (
+                        <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+                          <span className="relative flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-[#EFC16B] text-black shadow-[0_0_25px_rgba(239,193,107,0.4)] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#FAF7F1]">
+                            <Play
+                              className="h-6 w-6 sm:h-7 sm:w-7 fill-current translate-x-0.5"
+                              strokeWidth={2}
+                              aria-hidden="true"
+                            />
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Informações da Capa do Álbum */}
+                      <div className="absolute bottom-0 inset-x-0 p-4 z-10 text-center">
+                        <p className="text-[10px] text-[#EFC16B] font-mono uppercase tracking-wider font-semibold">
+                          Jojo Mendes · Faixa 0{index + 1}
+                        </p>
+                        <h3 className="font-display text-sm sm:text-base font-bold text-white truncate drop-shadow-md mt-0.5">
+                          {video.title}
+                        </h3>
+                        <p className="text-[10px] text-white/50 font-sans mt-0.5">
+                          {isActive ? 'Clique para assistir' : 'Clique para selecionar'}
+                        </p>
+                      </div>
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Seta Direita Flutuante */}
           <button
             type="button"
             onClick={handleNext}
             aria-label="Próximo vídeo"
-            className="absolute -right-2 sm:right-2 top-1/2 -translate-y-1/2 z-40 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-black/75 border border-white/20 text-white backdrop-blur-md hover:bg-black hover:border-[#EFC16B] hover:text-[#EFC16B] hover:scale-110 transition-all shadow-xl focus-visible:outline-none"
+            className="z-50 flex h-11 w-11 sm:h-13 sm:w-13 shrink-0 items-center justify-center rounded-full bg-black/85 border border-[#EFC16B]/60 text-[#EFC16B] hover:bg-[#EFC16B] hover:text-black hover:scale-110 active:scale-95 transition-all shadow-[0_10px_30px_rgba(0,0,0,0.9)] focus-visible:outline-none cursor-pointer"
           >
-            <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
+            <ChevronRight className="h-6 w-6" strokeWidth={2.5} />
           </button>
         </div>
 
@@ -410,7 +429,7 @@ export function VideosSection({ items = defaultVideos }: VideosSectionProps) {
                 type="button"
                 onClick={handlePrev}
                 aria-label="Vídeo anterior"
-                className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
               >
                 <SkipBack className="h-4 w-4 sm:h-5 sm:w-5 fill-current" />
               </button>
@@ -423,7 +442,7 @@ export function VideosSection({ items = defaultVideos }: VideosSectionProps) {
                     ? 'Pausar vídeo'
                     : `${copy.videos.playButtonLabel}: ${activeVideo.title}`
                 }
-                className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-[#EFC16B] text-black hover:bg-[#FAF7F1] transition-all shadow-[0_0_20px_rgba(239,193,107,0.4)] hover:scale-105 shrink-0"
+                className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-[#EFC16B] text-black hover:bg-[#FAF7F1] transition-all shadow-[0_0_20px_rgba(239,193,107,0.4)] hover:scale-105 shrink-0 cursor-pointer"
               >
                 {isPlaying ? (
                   <Pause className="h-5 w-5 fill-current" />
@@ -436,7 +455,7 @@ export function VideosSection({ items = defaultVideos }: VideosSectionProps) {
                 type="button"
                 onClick={handleNext}
                 aria-label="Próximo vídeo"
-                className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
               >
                 <SkipForward className="h-4 w-4 sm:h-5 sm:w-5 fill-current" />
               </button>
