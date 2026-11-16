@@ -20,10 +20,10 @@ export default function HomePage() {
 
         {/* Dobras subsequentes que sobem sobre a Hero cobrindo-a sem espaçamento em branco */}
         <div className="relative z-20 bg-bg shadow-[0_-28px_60px_rgba(10,10,14,0.45)]">
-          {/* Dobra 2 — História */}
-          <HistoriaSection />
-          {/* Dobra 3 — Agenda */}
+          {/* Dobra 2 — Agenda de Shows */}
           <AgendaSection />
+          {/* Dobra 3 — História / A Artista */}
+          <HistoriaSection />
           {/* Dobra 4 — Vídeos */}
           <VideosSection />
           {/* Dobra 5 — Galeria */}

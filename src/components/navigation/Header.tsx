@@ -9,8 +9,8 @@ import { cn } from '@/lib/utils';
 
 const NAV_ITEMS: NavItem[] = [
   { label: copy.nav.home, href: destinations.homeAnchor },
-  { label: copy.nav.history, href: destinations.history },
   { label: copy.nav.schedule, href: destinations.schedule },
+  { label: copy.nav.history, href: destinations.history },
   { label: copy.nav.videos, href: destinations.videos },
   { label: copy.nav.gallery, href: destinations.gallery },
   { label: copy.nav.musicians, href: destinations.musicians },
