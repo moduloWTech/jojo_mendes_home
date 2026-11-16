@@ -45,8 +45,8 @@ export function HeroDesktop({
   const artworkOpacity =
     rawSplit > 0.65 ? Math.max(0, 1 - (rawSplit - 0.65) / 0.3) : 1;
 
-  // Deslocamento dos botões (um para esquerda e outro para direita)
-  const btnShiftPct = splitProgress * 155;
+  // Deslocamento dos botões (um para esquerda e outro para direita) em viewport width
+  const btnShiftVw = splitProgress * 65;
   const btnOpacity =
     rawSplit > 0.55 ? Math.max(0, 1 - (rawSplit - 0.55) / 0.3) : 1;
 
@@ -173,57 +173,67 @@ export function HeroDesktop({
         </p>
 
         {/* Camada dos Botões: se separam no scroll (Agendar para a esquerda, Ver agenda para a direita) */}
-        <div className="absolute left-[29.0%] right-[13.5%] bottom-[2.2%] z-30 flex items-center justify-center gap-3 2xl:gap-4">
-          <Link
-            href={destinations.booking}
+        <div className="absolute left-[29.0%] right-[13.5%] bottom-[2.2%] z-30 flex items-center justify-center gap-3 2xl:gap-4 pointer-events-auto">
+          {/* Botão 1: Desloca para a ESQUERDA no scroll */}
+          <div
             style={{
-              transform: `translate3d(-${btnShiftPct}%, 0, 0)`,
+              transform: `translate3d(-${btnShiftVw}vw, 0, 0)`,
               opacity: btnOpacity,
             }}
-            className={cn(
-              'group relative inline-flex h-[44px] 2xl:h-[52px] flex-1 items-center justify-center gap-2.5 overflow-hidden rounded-pill bg-gradient-to-b from-[#FAE084] via-[#EBB338] to-[#CE8814] px-5 2xl:px-7 text-[15px] 2xl:text-[17px] font-bold text-[#111115] shadow-[0_8px_24px_rgba(206,136,20,0.38)] transition-all duration-200 ease-out hover:brightness-105 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(235,179,56,0.5)] active:scale-[0.98] will-change-transform',
-              isRevealed ? 'animate-hero-cta-1' : 'opacity-0'
-            )}
+            className="flex-1 will-change-transform"
           >
-            {isRevealed && (
-              <span
+            <Link
+              href={destinations.booking}
+              className={cn(
+                'group relative inline-flex h-[44px] 2xl:h-[52px] w-full items-center justify-center gap-2.5 overflow-hidden rounded-pill bg-gradient-to-b from-[#FAE084] via-[#EBB338] to-[#CE8814] px-5 2xl:px-7 text-[15px] 2xl:text-[17px] font-bold text-[#111115] shadow-[0_8px_24px_rgba(206,136,20,0.38)] transition-all duration-200 ease-out hover:brightness-105 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(235,179,56,0.5)] active:scale-[0.98]',
+                isRevealed ? 'animate-hero-cta-1' : 'opacity-0'
+              )}
+            >
+              {isRevealed && (
+                <span
+                  aria-hidden="true"
+                  className="animate-hero-shine pointer-events-none absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white/55 to-transparent"
+                />
+              )}
+              <CalendarDays
+                className="relative z-10 h-4 w-4 2xl:h-5 2xl:w-5 shrink-0 text-[#111115]"
+                strokeWidth={2}
                 aria-hidden="true"
-                className="animate-hero-shine pointer-events-none absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white/55 to-transparent"
               />
-            )}
-            <CalendarDays
-              className="relative z-10 h-4 w-4 2xl:h-5 2xl:w-5 shrink-0 text-[#111115]"
-              strokeWidth={2}
-              aria-hidden="true"
-            />
-            <span className="relative z-10 whitespace-nowrap">
-              {copy.hero.primaryCta}
-            </span>
-            <ArrowRight
-              className="relative z-10 h-4 w-4 2xl:h-5 2xl:w-5 shrink-0 text-[#111115] transition-transform duration-200 group-hover:translate-x-1"
-              strokeWidth={2}
-              aria-hidden="true"
-            />
-          </Link>
+              <span className="relative z-10 whitespace-nowrap">
+                {copy.hero.primaryCta}
+              </span>
+              <ArrowRight
+                className="relative z-10 h-4 w-4 2xl:h-5 2xl:w-5 shrink-0 text-[#111115] transition-transform duration-200 group-hover:translate-x-1"
+                strokeWidth={2}
+                aria-hidden="true"
+              />
+            </Link>
+          </div>
 
-          <Link
-            href={destinations.schedule}
+          {/* Botão 2: Desloca para a DIREITA no scroll */}
+          <div
             style={{
-              transform: `translate3d(${btnShiftPct}%, 0, 0)`,
+              transform: `translate3d(${btnShiftVw}vw, 0, 0)`,
               opacity: btnOpacity,
             }}
-            className={cn(
-              'group inline-flex h-[44px] 2xl:h-[52px] flex-1 items-center justify-center gap-2.5 rounded-pill border border-[#1A1A22]/75 bg-white/60 px-5 2xl:px-7 text-[15px] 2xl:text-[17px] font-semibold text-[#111115] backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[#111115] hover:bg-[#111115] hover:text-[#FAF7F1] active:scale-[0.98] will-change-transform',
-              isRevealed ? 'animate-hero-cta-2' : 'opacity-0'
-            )}
+            className="flex-1 will-change-transform"
           >
-            <PlayCircle
-              className="h-4 w-4 2xl:h-5 2xl:w-5 shrink-0 text-current transition-transform duration-200 group-hover:scale-105"
-              strokeWidth={2}
-              aria-hidden="true"
-            />
-            <span className="whitespace-nowrap">{copy.hero.secondaryCta}</span>
-          </Link>
+            <Link
+              href={destinations.schedule}
+              className={cn(
+                'group inline-flex h-[44px] 2xl:h-[52px] w-full items-center justify-center gap-2.5 rounded-pill border border-[#1A1A22]/75 bg-white/60 px-5 2xl:px-7 text-[15px] 2xl:text-[17px] font-semibold text-[#111115] backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[#111115] hover:bg-[#111115] hover:text-[#FAF7F1] active:scale-[0.98]',
+                isRevealed ? 'animate-hero-cta-2' : 'opacity-0'
+              )}
+            >
+              <PlayCircle
+                className="h-4 w-4 2xl:h-5 2xl:w-5 shrink-0 text-current transition-transform duration-200 group-hover:scale-105"
+                strokeWidth={2}
+                aria-hidden="true"
+              />
+              <span className="whitespace-nowrap">{copy.hero.secondaryCta}</span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -38,8 +38,8 @@ export function HeroMobile({
   const artworkOpacity =
     rawSplit > 0.65 ? Math.max(0, 1 - (rawSplit - 0.65) / 0.3) : 1;
 
-  // Deslocamento dos botões (um para esquerda e outro para direita)
-  const btnShiftVw = splitProgress * 120;
+  // Deslocamento dos botões (um para esquerda e outro para direita) em viewport width
+  const btnShiftVw = splitProgress * 125;
   const btnOpacity =
     rawSplit > 0.55 ? Math.max(0, 1 - (rawSplit - 0.55) / 0.3) : 1;
 
@@ -118,54 +118,64 @@ export function HeroMobile({
 
       {/* Bloco inferior: Os 2 CTAs empilhados se separando no scroll */}
       <div className="relative z-30 flex w-full max-w-[350px] sm:max-w-[380px] flex-col gap-2.5">
-        <Link
-          href={destinations.booking}
+        {/* Botão 1: Desloca para a ESQUERDA no scroll */}
+        <div
           style={{
             transform: `translate3d(-${btnShiftVw}vw, 0, 0)`,
             opacity: btnOpacity,
           }}
-          className={cn(
-            'group relative inline-flex min-h-[48px] w-full items-center justify-center gap-2.5 overflow-hidden rounded-pill bg-gradient-to-b from-[#FAE084] via-[#EBB338] to-[#CE8814] px-6 text-[16px] font-bold text-[#111115] shadow-[0_8px_20px_rgba(206,136,20,0.35)] transition-all duration-150 ease-out active:scale-[0.98] will-change-transform',
-            isRevealed ? 'animate-hero-cta-1' : 'opacity-0'
-          )}
+          className="w-full will-change-transform"
         >
-          {isRevealed && (
-            <span
+          <Link
+            href={destinations.booking}
+            className={cn(
+              'group relative inline-flex min-h-[48px] w-full items-center justify-center gap-2.5 overflow-hidden rounded-pill bg-gradient-to-b from-[#FAE084] via-[#EBB338] to-[#CE8814] px-6 text-[16px] font-bold text-[#111115] shadow-[0_8px_20px_rgba(206,136,20,0.35)] transition-all duration-150 ease-out active:scale-[0.98]',
+              isRevealed ? 'animate-hero-cta-1' : 'opacity-0'
+            )}
+          >
+            {isRevealed && (
+              <span
+                aria-hidden="true"
+                className="animate-hero-shine pointer-events-none absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white/55 to-transparent"
+              />
+            )}
+            <CalendarDays
+              className="relative z-10 h-4 w-4 shrink-0 text-[#111115]"
+              strokeWidth={2}
               aria-hidden="true"
-              className="animate-hero-shine pointer-events-none absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white/55 to-transparent"
             />
-          )}
-          <CalendarDays
-            className="relative z-10 h-4 w-4 shrink-0 text-[#111115]"
-            strokeWidth={2}
-            aria-hidden="true"
-          />
-          <span className="relative z-10">{copy.hero.primaryCta}</span>
-          <ArrowRight
-            className="relative z-10 h-4 w-4 shrink-0 text-[#111115]"
-            strokeWidth={2}
-            aria-hidden="true"
-          />
-        </Link>
+            <span className="relative z-10">{copy.hero.primaryCta}</span>
+            <ArrowRight
+              className="relative z-10 h-4 w-4 shrink-0 text-[#111115]"
+              strokeWidth={2}
+              aria-hidden="true"
+            />
+          </Link>
+        </div>
 
-        <Link
-          href={destinations.schedule}
+        {/* Botão 2: Desloca para a DIREITA no scroll */}
+        <div
           style={{
             transform: `translate3d(${btnShiftVw}vw, 0, 0)`,
             opacity: btnOpacity,
           }}
-          className={cn(
-            'group inline-flex min-h-[48px] w-full items-center justify-center gap-2.5 rounded-pill border border-[#1A1A22]/75 bg-white/65 px-6 text-[16px] font-semibold text-[#111115] backdrop-blur-sm transition-all duration-150 ease-out active:scale-[0.98] will-change-transform',
-            isRevealed ? 'animate-hero-cta-2' : 'opacity-0'
-          )}
+          className="w-full will-change-transform"
         >
-          <PlayCircle
-            className="h-4 w-4 shrink-0 text-[#111115]"
-            strokeWidth={2}
-            aria-hidden="true"
-          />
-          <span>{copy.hero.secondaryCta}</span>
-        </Link>
+          <Link
+            href={destinations.schedule}
+            className={cn(
+              'group inline-flex min-h-[48px] w-full items-center justify-center gap-2.5 rounded-pill border border-[#1A1A22]/75 bg-white/65 px-6 text-[16px] font-semibold text-[#111115] backdrop-blur-sm transition-all duration-150 ease-out active:scale-[0.98]',
+              isRevealed ? 'animate-hero-cta-2' : 'opacity-0'
+            )}
+          >
+            <PlayCircle
+              className="h-4 w-4 shrink-0 text-[#111115]"
+              strokeWidth={2}
+              aria-hidden="true"
+            />
+            <span>{copy.hero.secondaryCta}</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
