@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { heroMedia } from '@/content/site';
 import { copy } from '@/content/copy';
@@ -8,8 +8,8 @@ import { HeroMobile } from '@/components/home/HeroMobile';
 import { HeroDesktop } from '@/components/home/HeroDesktop';
 
 export function Hero() {
-  const containerRef = useRef<HTMLElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isPastHero, setIsPastHero] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
 
@@ -34,26 +34,18 @@ export function Hero() {
     };
   }, []);
 
-  // Monitora a rolagem na primeira dobra para calcular o progresso de 0.0 a 1.0
+  // Progresso do scroll: de 0.0 (topo da Hero) a 1.0 (quando a segunda dobra cobre a Hero por completo)
   useEffect(() => {
     let ticking = false;
 
     const onScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          if (!containerRef.current) {
-            ticking = false;
-            return;
-          }
-          const rect = containerRef.current.getBoundingClientRect();
-          const totalDistance = rect.height - window.innerHeight;
-          if (totalDistance > 0) {
-            const raw = -rect.top / totalDistance;
-            const progress = Math.min(Math.max(raw, 0), 1);
-            setScrollProgress(progress);
-          } else {
-            setScrollProgress(0);
-          }
+          const vh = window.innerHeight || 800;
+          const currentY = window.scrollY;
+          const progress = Math.min(Math.max(currentY / vh, 0), 1);
+          setScrollProgress(progress);
+          setIsPastHero(currentY > vh * 1.15);
           ticking = false;
         });
         ticking = true;
@@ -76,14 +68,19 @@ export function Hero() {
     Boolean(desktopBgVideoSrc) && !prefersReducedMotion && !videoFailed;
 
   return (
-    <section
-      ref={containerRef}
-      id="inicio"
-      aria-label={copy.nav.home}
-      className="relative h-[220vh] w-full bg-[#ECEEF2]"
-    >
-      {/* Viewport fixo na tela durante o scroll (pinned stage) */}
-      <div className="sticky top-0 h-[100svh] max-h-[100svh] w-full overflow-hidden bg-[#ECEEF2]">
+    <>
+      {/* Âncora inicial para navegação */}
+      <div id="inicio" className="absolute top-0 left-0 h-px w-px pointer-events-none" aria-hidden="true" />
+
+      {/* Dobra 1 — Totalmente fixa na tela (não sobe com o scroll; permanece parada como palco fixo de parallax) */}
+      <section
+        aria-label={copy.nav.home}
+        style={{
+          visibility: isPastHero ? 'hidden' : 'visible',
+          pointerEvents: scrollProgress >= 1 ? 'none' : 'auto',
+        }}
+        className="fixed inset-0 z-10 h-[100svh] w-full overflow-hidden bg-[#ECEEF2]"
+      >
         {/* Único H1 semântico da Home para leitores de tela e SEO */}
         <h1 className="sr-only">{copy.hero.srOnlyHeading}</h1>
 
@@ -126,13 +123,13 @@ export function Hero() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(246,247,250,0.52)_0%,rgba(234,236,241,0.82)_65%,rgba(218,222,230,0.94)_100%)]" />
         </div>
 
-        {/* Composição Mobile (<1200px) com transição de scroll responsiva */}
+        {/* Composição Mobile (<1200px) */}
         <HeroMobile
           isRevealed
           scrollProgress={prefersReducedMotion ? 0 : scrollProgress}
         />
 
-        {/* Composição Desktop (>=1200px) com transição de scroll responsiva */}
+        {/* Composição Desktop (>=1200px) */}
         <HeroDesktop
           shouldShowVideo={shouldShowVideo}
           videoSrc={desktopBgVideoSrc}
@@ -140,7 +137,10 @@ export function Hero() {
           isRevealed
           scrollProgress={prefersReducedMotion ? 0 : scrollProgress}
         />
-      </div>
-    </section>
+      </section>
+
+      {/* Espaço reservado no fluxo do documento (100svh) para a 2ª dobra sobrepor a 1ª no scroll */}
+      <div className="h-[100svh] w-full pointer-events-none" aria-hidden="true" />
+    </>
   );
 }

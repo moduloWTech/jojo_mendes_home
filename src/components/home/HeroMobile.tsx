@@ -27,21 +27,21 @@ export function HeroMobile({
   isRevealed = true,
   scrollProgress = 0,
 }: HeroMobileProps) {
-  // A separação ocorre nos primeiros 65% do scroll da dobra fixa
-  const rawSplit = Math.min(Math.max(scrollProgress / 0.65, 0), 1);
-  // Curva cúbica suave (easeOutCubic)
-  const splitProgress = 1 - Math.pow(1 - rawSplit, 3);
+  // A separação dos elementos acompanha o scroll enquanto a segunda dobra sobe
+  const progress = Math.min(Math.max(scrollProgress, 0), 1);
+  // Transição com aceleração gradual para afastar os elementos
+  const splitProgress = Math.pow(progress, 1.15);
 
   // Deslocamento horizontal no mobile
-  const leftShiftPct = splitProgress * 115;
-  const rightShiftPct = splitProgress * 115;
-  const artworkOpacity =
-    rawSplit > 0.65 ? Math.max(0, 1 - (rawSplit - 0.65) / 0.3) : 1;
+  const leftShiftPct = splitProgress * 120;
+  const rightShiftPct = splitProgress * 120;
 
   // Deslocamento dos botões (um para esquerda e outro para direita) em viewport width
   const btnShiftVw = splitProgress * 125;
-  const btnOpacity =
-    rawSplit > 0.55 ? Math.max(0, 1 - (rawSplit - 0.55) / 0.3) : 1;
+
+  // Os elementos ficam 100% visíveis enquanto se deslocam e a 2ª dobra passa por cima
+  const artworkOpacity = progress >= 1 ? 0 : 1;
+  const btnOpacity = progress >= 1 ? 0 : 1;
 
   return (
     <div

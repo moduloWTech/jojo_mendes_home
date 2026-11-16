@@ -17,20 +17,24 @@ export default function HomePage() {
       <main id="conteudo-principal" className="flex-1">
         {/* Dobra 1 — Hero cinematográfica */}
         <Hero />
-        {/* Dobra 2 — História */}
-        <HistoriaSection />
-        {/* Dobra 3 — Agenda */}
-        <AgendaSection />
-        {/* Dobra 4 — Vídeos */}
-        <VideosSection />
-        {/* Dobra 5 — Galeria */}
-        <GaleriaSection />
-        {/* Dobra 6 — Formação musical */}
-        <MusicosSection />
-        {/* Dobra 7 — Chamada comercial */}
-        <ContratacaoCTASection />
-        {/* Dobra 8 — Material de divulgação */}
-        <ImprensaSection />
+
+        {/* Dobras subsequentes que sobem sobre a Hero cobrindo-a sem espaçamento em branco */}
+        <div className="relative z-20 bg-bg shadow-[0_-28px_60px_rgba(10,10,14,0.45)]">
+          {/* Dobra 2 — História */}
+          <HistoriaSection />
+          {/* Dobra 3 — Agenda */}
+          <AgendaSection />
+          {/* Dobra 4 — Vídeos */}
+          <VideosSection />
+          {/* Dobra 5 — Galeria */}
+          <GaleriaSection />
+          {/* Dobra 6 — Formação musical */}
+          <MusicosSection />
+          {/* Dobra 7 — Chamada comercial */}
+          <ContratacaoCTASection />
+          {/* Dobra 8 — Material de divulgação */}
+          <ImprensaSection />
+        </div>
       </main>
       {/* Dobra 9 — Footer */}
       <Footer />
