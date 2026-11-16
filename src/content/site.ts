@@ -312,19 +312,31 @@ export const videos: ArtistVideo[] = [
   {
     id: 'demo-video-1',
     youtubeId: 'aqz-KE-bpKQ',
-    title: 'Prévia do layout de vídeo',
+    title: 'Eita Cantiga! — Ao Vivo no São João',
     isDemo: true,
   },
   {
     id: 'demo-video-2',
     youtubeId: 'LXb3EKWsInQ',
-    title: 'Prévia do layout de vídeo 2',
+    title: 'Onde a Cantiga Começou — Acústico Sertanejo',
     isDemo: true,
   },
   {
     id: 'demo-video-3',
     youtubeId: 'ysz5S6PUM-U',
-    title: 'Prévia do layout de vídeo 3',
+    title: 'Pout-Pourri Forró Tradicional — Ao Vivo na Estrada',
+    isDemo: true,
+  },
+  {
+    id: 'demo-video-4',
+    youtubeId: 'aqz-KE-bpKQ',
+    title: 'Na Pegada da Sanfona & Metais — Show Completo',
+    isDemo: true,
+  },
+  {
+    id: 'demo-video-5',
+    youtubeId: 'LXb3EKWsInQ',
+    title: 'Coração Nordestino — Turnê Grandes Arenas',
     isDemo: true,
   },
 ];

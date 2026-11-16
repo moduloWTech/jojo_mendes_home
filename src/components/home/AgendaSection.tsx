@@ -32,25 +32,13 @@ function getWeekdayLabel(isoDate: string): string {
   return WEEKDAY_FORMATTER.format(dt).replace('.', '').toUpperCase();
 }
 
-export function ShowCard({ show, index = 0 }: ShowCardProps) {
+export function ShowCard({ show }: ShowCardProps) {
   const { day, month } = formatShowDateParts(show.date);
   const weekday = getWeekdayLabel(show.date);
-  const [entered, setEntered] = useState(false);
-
-  useEffect(() => {
-    setEntered(false);
-    const timer = setTimeout(() => {
-      setEntered(true);
-    }, 40 + index * 90);
-    return () => clearTimeout(timer);
-  }, [show.id, index]);
 
   return (
     <article
-      className={cn(
-        'group flex items-center justify-between gap-3 sm:gap-4 border-b border-[#FAF7F1]/12 py-2.5 sm:py-3.5 lg:py-4 transition-all duration-500 ease-out hover:border-[#EFC16B]/55 lg:hover:pl-1.5',
-        entered ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0'
-      )}
+      className="group flex items-center justify-between gap-3 sm:gap-4 border-b border-[#FAF7F1]/12 py-2.5 sm:py-3.5 lg:py-4 transition-all duration-300 ease-out hover:border-[#EFC16B]/55 lg:hover:pl-1.5"
     >
       <div className="flex items-center gap-3.5 sm:gap-5 min-w-0">
         {/* Data minimalista em ouro */}

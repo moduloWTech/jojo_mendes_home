@@ -137,7 +137,7 @@ export function VideosSection({ items = defaultVideos }: VideosSectionProps) {
     <section
       id="videos"
       aria-labelledby="videos-heading"
-      className="relative min-h-[100svh] w-full overflow-hidden bg-gradient-to-b from-[#1a0815] via-[#0d0714] to-[#08070A] py-16 sm:py-20 lg:py-24 text-white flex flex-col justify-center"
+      className="relative min-h-[100svh] w-full overflow-hidden bg-gradient-to-b from-[#1a0815] via-[#0d0714] to-[#08070A] pt-24 sm:pt-28 lg:pt-32 pb-16 sm:pb-20 lg:pb-24 text-white flex flex-col justify-center scroll-mt-20"
     >
       {/* =====================================================================
           ATMOSFERA DE ESTÚDIO & PALCO (ILUMINAÇÃO DEGRADÊ VINHO/ROXO - IMAGEM 1 E 2)
@@ -325,10 +325,8 @@ export function VideosSection({ items = defaultVideos }: VideosSectionProps) {
                             setIsPlaying(true);
                           }}
                           aria-label={`${copy.videos.playButtonLabel}: ${video.title}`}
-                          className="group/btn relative flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-[#EFC16B] text-black shadow-[0_0_30px_rgba(239,193,107,0.5)] transition-all duration-300 hover:scale-110 hover:bg-[#FAF7F1] focus-visible:outline-none"
+                          className="group/btn relative flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-[#EFC16B] text-black shadow-[0_0_25px_rgba(239,193,107,0.4)] transition-all duration-300 hover:scale-110 hover:bg-[#FAF7F1] focus-visible:outline-none"
                         >
-                          {/* Anel pulsante decorativo */}
-                          <span className="absolute -inset-2 rounded-full border border-[#EFC16B]/50 animate-ping pointer-events-none" />
                           <Play
                             className="h-6 w-6 sm:h-7 sm:w-7 fill-current translate-x-0.5"
                             strokeWidth={2}
