@@ -255,10 +255,13 @@ export function VideosSection({ items = defaultVideos }: VideosSectionProps) {
               filter = 'blur(1px)';
             }
 
-            // Foto de capa de alta resolução
-            const coverImage =
-              FALLBACK_COVERS[index % FALLBACK_COVERS.length] ??
-              '/media/jojo/foto-palco-noite.jpeg';
+            const thumbUrl = `https://i.ytimg.com/vi/${encodeURIComponent(
+              video.youtubeId
+            )}/hqdefault.jpg`;
+            const isThumbFailed = thumbErrors[video.id];
+            const coverImage = isThumbFailed
+              ? (FALLBACK_COVERS[index % FALLBACK_COVERS.length] ?? '/media/jojo/foto-palco-noite.jpeg')
+              : thumbUrl;
 
             return (
               <div
@@ -296,6 +299,12 @@ export function VideosSection({ items = defaultVideos }: VideosSectionProps) {
                       alt={video.title}
                       fill
                       sizes="(max-width: 640px) 240px, 300px"
+                      onError={() =>
+                        setThumbErrors((prev) => ({
+                          ...prev,
+                          [video.id]: true,
+                        }))
+                      }
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       priority={isActive}
                     />

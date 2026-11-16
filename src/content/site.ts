@@ -33,7 +33,7 @@ export const brand = {
 export const socialLinks: SocialLinks = {
   instagram: null,
   tiktok: null,
-  youtube: null,
+  youtube: 'https://www.youtube.com/@jojomendesoficial',
 };
 
 /**
@@ -308,36 +308,46 @@ export const shows: Show[] = [
  * Enquanto os IDs oficiais do YouTube da cantora não forem enviados,
  * utiliza vídeos demonstrativos claramente identificados com isDemo: true.
  */
+/**
+ * Vídeos oficiais da artista (#videos).
+ * Apresentações oficiais do canal @jojomendesoficial.
+ */
 export const videos: ArtistVideo[] = [
   {
-    id: 'demo-video-1',
-    youtubeId: 'aqz-KE-bpKQ',
-    title: 'Eita Cantiga! — Ao Vivo no São João',
-    isDemo: true,
+    id: 'video-01',
+    youtubeId: 'QaEwVp334kA',
+    title: 'Jojo Mendes — Ao Vivo (Seresta & Arrocha)',
+    isDemo: false,
   },
   {
-    id: 'demo-video-2',
-    youtubeId: 'LXb3EKWsInQ',
-    title: 'Onde a Cantiga Começou — Acústico Sertanejo',
-    isDemo: true,
+    id: 'video-02',
+    youtubeId: 'bE1HTm7x9PY',
+    title: 'Quatro Enganados (Versão Arrocha)',
+    isDemo: false,
   },
   {
-    id: 'demo-video-3',
-    youtubeId: 'ysz5S6PUM-U',
-    title: 'Pout-Pourri Forró Tradicional — Ao Vivo na Estrada',
-    isDemo: true,
+    id: 'video-03',
+    youtubeId: 'VHxHgoNqpL4',
+    title: 'Body Splash — Jojo Mendes',
+    isDemo: false,
   },
   {
-    id: 'demo-video-4',
-    youtubeId: 'aqz-KE-bpKQ',
-    title: 'Na Pegada da Sanfona & Metais — Show Completo',
-    isDemo: true,
+    id: 'video-04',
+    youtubeId: 'icHtU7KSk2A',
+    title: 'Me Leva Pra Casa / Escrito Nas Estrelas / Saudades',
+    isDemo: false,
   },
   {
-    id: 'demo-video-5',
-    youtubeId: 'LXb3EKWsInQ',
-    title: 'Coração Nordestino — Turnê Grandes Arenas',
-    isDemo: true,
+    id: 'video-05',
+    youtubeId: 'E4ZxPY98Xfs',
+    title: 'Canudinho — Jojo Mendes',
+    isDemo: false,
+  },
+  {
+    id: 'video-06',
+    youtubeId: 'afPdDCRmcjw',
+    title: 'Perigo — Jojo Mendes',
+    isDemo: false,
   },
 ];
 

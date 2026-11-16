@@ -43,7 +43,18 @@ describe('Jojo Mendes — Critérios de Aceite da Home e Contratação', () => {
 
   it('Vídeos rotulam vídeos demonstrativos e montam iframe somente após clique', async () => {
     const user = userEvent.setup();
-    render(<VideosSection />);
+    render(
+      <VideosSection
+        items={[
+          {
+            id: 'demo-test',
+            youtubeId: 'QaEwVp334kA',
+            title: 'Vídeo de Demonstração',
+            isDemo: true,
+          },
+        ]}
+      />
+    );
 
     expect(
       screen.getAllByText(copy.videos.demoBadge).length
