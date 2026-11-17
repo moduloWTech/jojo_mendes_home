@@ -46,6 +46,10 @@ export type PressAsset = {
   href: string;
   format: string;
   sizeLabel?: string;
+  category?: 'logo' | 'foto' | 'rider';
+  thumbnail?: string;
+  badge?: string;
+  isTransparent?: boolean;
 };
 
 export type HeroMedia = {

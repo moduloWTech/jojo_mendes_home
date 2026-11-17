@@ -133,6 +133,15 @@ describe('Jojo Mendes — Critérios de Aceite da Home e Contratação', () => {
     expect(ctaLink).toHaveAttribute('href', destinations.booking);
   });
 
+  it('ImprensaSection exibe cartões de materiais de divulgação e caixa de release para cópia', () => {
+    render(<ImprensaSection />);
+
+    expect(screen.getByText(copy.press.title)).toBeInTheDocument();
+    expect(screen.getByText(copy.press.releaseTitle)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: copy.press.copyReleaseCta })).toBeInTheDocument();
+    expect(screen.getByText('Logotipo Oficial Dourado')).toBeInTheDocument();
+  });
+
   it('Formulário de contratação valida campos obrigatórios e exibe aviso de modo demonstração quando API retorna 503 NOT_CONFIGURED', async () => {
     const user = userEvent.setup();
     vi.spyOn(global, 'fetch').mockResolvedValueOnce(

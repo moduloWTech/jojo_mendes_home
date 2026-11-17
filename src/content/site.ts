@@ -457,9 +457,65 @@ export const musicians: Musician[] = [];
 
 /**
  * Material de divulgação / Imprensa (#imprensa).
- * Mantido vazio até liberação oficial de press kit e rider técnico para exibir "Materiais em preparação.".
+ * Arquivos oficiais em alta resolução para download por contratantes e imprensa.
  */
-export const pressAssets: PressAsset[] = [];
+export const pressAssets: PressAsset[] = [
+  {
+    id: 'press-logo-oficial',
+    title: 'Logotipo Oficial Dourado',
+    href: '/media/jojo/logo-oficial.png',
+    format: 'PNG HD',
+    sizeLabel: '866 × 288 px',
+    category: 'logo',
+    thumbnail: '/media/jojo/logo-oficial.png',
+    badge: 'Fundo Transparente',
+    isTransparent: true,
+  },
+  {
+    id: 'press-logo-simbolo',
+    title: 'Símbolo & Emblema Oficial (JM)',
+    href: '/media/jojo/logo-simbolo.png',
+    format: 'PNG HD',
+    sizeLabel: '500 × 500 px',
+    category: 'logo',
+    thumbnail: '/media/jojo/logo-simbolo.png',
+    badge: 'Ícone Oficial',
+    isTransparent: true,
+  },
+  {
+    id: 'press-foto-recorte',
+    title: 'Foto Recortada para Cartazes',
+    href: '/media/jojo/jojo-recorte-hd.png',
+    format: 'PNG HD',
+    sizeLabel: '1118 × 1600 px',
+    category: 'foto',
+    thumbnail: '/media/jojo/jojo-recorte-hd.png',
+    badge: 'Pronta para Flyer',
+    isTransparent: true,
+  },
+  {
+    id: 'press-foto-editorial',
+    title: 'Foto Editorial — Ensaio Cantando',
+    href: '/media/jojo/foto-ensaio-cantando.jpeg',
+    format: 'JPEG HD',
+    sizeLabel: 'Alta Resolução',
+    category: 'foto',
+    thumbnail: '/media/jojo/foto-ensaio-cantando.jpeg',
+    badge: 'Retrato de Imprensa',
+    isTransparent: false,
+  },
+  {
+    id: 'press-mapa-palco',
+    title: 'Mapa de Palco & Rider Técnico',
+    href: '/media/mapa-palco-jojo-mendes.png',
+    format: 'PNG HD',
+    sizeLabel: '1448 × 1086 px',
+    category: 'rider',
+    thumbnail: '/media/mapa-palco-jojo-mendes.png',
+    badge: 'Ficha Técnica Oficial',
+    isTransparent: false,
+  },
+];
 
 export const brazilianStates = [
   { value: 'AC', label: 'Acre (AC)' },

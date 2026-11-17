@@ -100,13 +100,25 @@ export const copy = {
     subtext: 'Resposta rápida da produção executiva em até 24 horas úteis',
   },
   press: {
-    eyebrow: 'PARA PRODUTORES',
+    eyebrow: 'PARA PRODUTORES & IMPRENSA',
     title: 'Material de divulgação',
     descriptionWithFiles:
-      'Arquivos oficiais para divulgação e produção de eventos.',
+      'Arquivos oficiais em alta resolução para cartazes, assessoria de imprensa e produção técnica de eventos.',
     downloadCta: 'Baixar arquivo',
     emptyMessage: 'Materiais em preparação.',
     loadingText: 'Carregando materiais...',
+    releaseTitle: 'Release Oficial para Imprensa',
+    releaseBadge: 'Texto pronto para divulgação',
+    releaseText:
+      'Com presença de palco marcante e interpretação autêntica, Jojo Mendes é uma das vozes mais versáteis da música popular brasileira. Seu show reúne uma potente celebração de ritmos com arranjos vibrantes de forró, seresta, sertanejo, brega e clássicos contagiantes que movimentam públicos de todas as idades em grandes festivais, praças e eventos corporativos.',
+    copyReleaseCta: 'Copiar texto do release',
+    copiedReleaseCta: 'Release copiado para a área de transferência!',
+    categories: {
+      all: 'Todos os materiais',
+      logo: 'Identidade & Logos',
+      foto: 'Fotos de Divulgação',
+      rider: 'Rider & Mapa de Palco',
+    },
   },
   footer: {
     tagline: 'Site oficial de Jojo Mendes.',
