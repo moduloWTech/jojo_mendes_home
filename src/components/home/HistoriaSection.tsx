@@ -46,6 +46,10 @@ const TOPICS: AccordionItem[] = [
 ];
 
 export function HistoriaSection() {
+  const sectionRef = React.useRef<HTMLElement | null>(null);
+  const [scrollProgress, setScrollProgress] = useState(0.5); // inicia centralizado para SSR seguro
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
   // Todos os tópicos iniciam fechados conforme solicitado
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -53,8 +57,100 @@ export function HistoriaSection() {
     setOpenId((prev) => (prev === id ? null : id));
   };
 
+  React.useEffect(() => {
+    if (
+      typeof window === 'undefined' ||
+      typeof window.matchMedia !== 'function'
+    ) {
+      return;
+    }
+
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(motionQuery.matches);
+
+    const onMotionChange = (event: MediaQueryListEvent) => {
+      setPrefersReducedMotion(event.matches);
+    };
+    motionQuery.addEventListener('change', onMotionChange);
+
+    return () => {
+      motionQuery.removeEventListener('change', onMotionChange);
+    };
+  }, []);
+
+  // Monitora a posição relativa da seção na viewport para aplicar os efeitos de entrada e saída no scroll
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    let ticking = false;
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const section = sectionRef.current;
+          if (!section) {
+            ticking = false;
+            return;
+          }
+
+          const rect = section.getBoundingClientRect();
+          const vh = window.innerHeight || 800;
+          const totalDistance = rect.height + vh;
+          const currentDistance = vh - rect.top;
+          const progress = Math.min(
+            Math.max(currentDistance / totalDistance, 0),
+            1
+          );
+
+          setScrollProgress(progress);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    onScroll();
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+
+  // Efeito contínuo e marcante de profundidade ("o fundo vai indo para trás no scroll"):
+  // O fundo se afasta continuamente de 1.18x (mais perto) para 0.96x (recolhido em profundidade),
+  // com deslocamento vertical de parallax de 120px que acentua a sensação tridimensional de câmera.
+  const bgScale = prefersReducedMotion ? 1 : 1.18 - scrollProgress * 0.22;
+  const bgParallaxY = prefersReducedMotion ? 0 : (0.5 - scrollProgress) * 120;
+
+  // Curvas de transição do card (flutuação na entrada e dissolução na saída)
+  let cardTranslateY = 0;
+  let cardScale = 1;
+  let cardOpacity = 1;
+
+  if (!prefersReducedMotion) {
+    if (scrollProgress < 0.45) {
+      // Entrada (Scroll In): Card sobe flutuando com escala e fade-in
+      const t = Math.min(Math.max((scrollProgress - 0.08) / 0.35, 0), 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      cardTranslateY = (1 - ease) * 65;
+      cardScale = 0.93 + ease * 0.07;
+      cardOpacity = 0.15 + ease * 0.85;
+    } else if (scrollProgress > 0.65) {
+      // Saída (Scroll Out): Card desacelera e dissolve suavemente antes da próxima dobra cobrir
+      const t = Math.min(Math.max((scrollProgress - 0.65) / 0.28, 0), 1);
+      const ease = Math.pow(t, 2.5);
+      cardTranslateY = -ease * 55;
+      cardScale = 1 - ease * 0.05;
+      cardOpacity = 1 - ease * 0.75;
+    }
+  }
+
   return (
     <section
+      ref={sectionRef}
       id="historia"
       aria-label="A Artista — Jojo Mendes"
       style={{ clipPath: 'inset(0)' }}
@@ -63,11 +159,21 @@ export function HistoriaSection() {
       {/* =====================================================================
           CAMADA DE BACKGROUND PARALLAX FIXO:
           - Ancorada à viewport iniciando abaixo do header fixo
-          - object-top garante que as cabeças fiquem 100% visíveis
+          - origin-top garante que os rostos fiquem sempre perfeitamente enquadrados
+          - Efeito marcante de profundidade contínua no scroll
          ===================================================================== */}
       <div className="fixed inset-x-0 top-[84px] sm:top-[92px] lg:top-[96px] bottom-0 z-0 pointer-events-none select-none">
         {/* Desktop: Imagem panorâmica */}
-        <div className="hidden md:block relative w-full h-full">
+        <div
+          className="hidden md:block relative w-full h-full origin-top"
+          style={{
+            transform: prefersReducedMotion
+              ? 'none'
+              : `translate3d(0, ${bgParallaxY}px, 0) scale(${bgScale})`,
+            willChange: 'transform',
+            transition: 'transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1)',
+          }}
+        >
           <Image
             src="/media/sobre-jojo/bg-historia-parallax.jpg"
             alt="Jojo Mendes Trajetória"
@@ -79,7 +185,16 @@ export function HistoriaSection() {
         </div>
 
         {/* Mobile: Versão vertical */}
-        <div className="block md:hidden relative w-full h-full">
+        <div
+          className="block md:hidden relative w-full h-full origin-top"
+          style={{
+            transform: prefersReducedMotion
+              ? 'none'
+              : `translate3d(0, ${bgParallaxY}px, 0) scale(${bgScale})`,
+            willChange: 'transform',
+            transition: 'transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1)',
+          }}
+        >
           <Image
             src="/media/sobre-jojo/bg-historia-parallax-mobile.jpg"
             alt="Jojo Mendes"
@@ -109,25 +224,60 @@ export function HistoriaSection() {
       <div
         className="pointer-events-none absolute inset-0 z-[5] bg-[#08070A]/35"
         aria-hidden="true"
-      />
+      >
+        {/* Luz cênica que ganha intensidade suave no centro da seção */}
+        <div
+          className="absolute right-[5%] lg:right-[15%] top-[25%] h-[400px] w-[500px] rounded-full bg-[radial-gradient(circle,rgba(239,193,107,0.14)_0%,transparent_70%)] blur-3xl pointer-events-none transition-opacity duration-300"
+          style={{
+            opacity: prefersReducedMotion
+              ? 0.5
+              : Math.max(0, 1 - Math.abs(scrollProgress - 0.5) * 2.8),
+          }}
+        />
+      </div>
 
       {/* =====================================================================
           CONTEÚDO: ACCORDION EDITORIAL POSICIONADO NO LADO DIREITO
           - No Desktop: Alinhado à direita (justify-end), liberando a Jojo e os quadros à esquerda e centro
           - No Mobile: Centralizado com margens elegantes
-          - Caixa em vidro fosco translúcido delicado (estilo GruboGrubo)
+          - Caixa em vidro fosco translúcido com efeitos de entrada e saída no scroll
          ===================================================================== */}
       <div className="relative z-10 w-full max-w-7xl mx-auto flex items-center justify-center lg:justify-end">
-        <div className="w-full max-w-xl lg:max-w-[540px] xl:max-w-[580px]">
-          
+        <div
+          className="w-full max-w-xl lg:max-w-[540px] xl:max-w-[580px]"
+          style={{
+            transform: prefersReducedMotion
+              ? 'none'
+              : `translate3d(0, ${cardTranslateY}px, 0) scale(${cardScale})`,
+            opacity: prefersReducedMotion ? 1 : cardOpacity,
+            willChange: 'transform, opacity',
+            transition:
+              'transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.12s ease-out',
+          }}
+        >
           {/* Card de Vidro Fosco Translúcido Delicado */}
           <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/[0.12] bg-[#0c0a14]/30 sm:bg-[#0c0a14]/25 p-5 sm:p-7 lg:p-9 shadow-[0_25px_70px_rgba(0,0,0,0.7)] backdrop-blur-xl">
-            
-            {/* Filete superior com brilho suave */}
+            {/* Filete superior com brilho suave estático */}
             <div
-              className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#EFC16B]/60 to-transparent"
+              className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[#EFC16B]/40 to-transparent"
               aria-hidden="true"
             />
+
+            {/* Filete superior com brilho dourado dinâmico na rolagem */}
+            <div
+              className="pointer-events-none absolute top-0 left-0 right-0 h-[2px] overflow-hidden"
+              aria-hidden="true"
+            >
+              <div
+                className="h-full w-2/5 bg-gradient-to-r from-transparent via-[#EFC16B] to-transparent opacity-90 transition-transform duration-100 ease-out"
+                style={{
+                  transform: prefersReducedMotion
+                    ? 'none'
+                    : `translate3d(${(scrollProgress - 0.45) * 260}%, 0, 0)`,
+                  willChange: 'transform',
+                }}
+              />
+            </div>
 
             {/* Cabeçalho do Card com destaque para a história da cantora */}
             <div className="pb-4 sm:pb-5 border-b border-white/10 mb-2">
