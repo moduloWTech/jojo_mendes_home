@@ -83,18 +83,26 @@ export function PhotoLightbox({
     returnFocusRef?.current?.focus();
   };
 
+  // Fecha o modal ao clicar em qualquer ponto fora da foto
+  const handleContainerClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName !== 'IMG' && !target.closest('button')) {
+      handleClose();
+    }
+  };
+
   return (
     <div
       ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label={`${copy.gallery.title} — ${activeImage.alt}`}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/95 p-4 md:p-8 backdrop-blur-md"
+      onClick={handleContainerClick}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/95 p-4 md:p-8 backdrop-blur-md cursor-pointer"
     >
       {/* Clique no backdrop fecha */}
       <div
         className="fixed inset-0"
-        onClick={handleClose}
         aria-hidden="true"
       />
 
