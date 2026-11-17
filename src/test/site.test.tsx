@@ -7,9 +7,10 @@ import { AgendaSection } from '@/components/home/AgendaSection';
 import { VideosSection } from '@/components/home/VideosSection';
 import { GaleriaSection } from '@/components/home/GaleriaSection';
 import { MusicosSection } from '@/components/home/MusicosSection';
+import { ContratacaoCTASection } from '@/components/home/ContratacaoCTASection';
 import { ImprensaSection } from '@/components/home/ImprensaSection';
 import { BookingForm } from '@/components/booking/BookingForm';
-import { copy } from '@/content/copy';
+import { copy, destinations } from '@/content/copy';
 
 describe('Jojo Mendes — Critérios de Aceite da Home e Contratação', () => {
   beforeEach(() => {
@@ -121,14 +122,15 @@ describe('Jojo Mendes — Critérios de Aceite da Home e Contratação', () => {
     expect(screen.getByText(copy.musicians.audienceLabel)).toBeInTheDocument();
   });
 
-  it('Mapa de Palco exibe trio cênico (Guitarrista, Jojo Mendes, Tecladista)', () => {
-    render(<MusicosSection />);
+  it('Contratação CTA exibe chamada comercial e link para /contratacao', () => {
+    render(<ContratacaoCTASection />);
 
-    expect(screen.getByText(copy.musicians.stageMapDiagramTitle)).toBeInTheDocument();
-    expect(screen.getByText('Guitarrista')).toBeInTheDocument();
-    expect(screen.getByText('Jojo Mendes')).toBeInTheDocument();
-    expect(screen.getByText('Tecladista')).toBeInTheDocument();
-    expect(screen.getByText(copy.musicians.audienceLabel)).toBeInTheDocument();
+    expect(screen.getByText(copy.bookingBanner.eyebrow)).toBeInTheDocument();
+    expect(screen.getByText(copy.bookingBanner.title)).toBeInTheDocument();
+    const ctaLink = screen.getByRole('link', {
+      name: new RegExp(copy.bookingBanner.cta, 'i'),
+    });
+    expect(ctaLink).toHaveAttribute('href', destinations.booking);
   });
 
   it('Formulário de contratação valida campos obrigatórios e exibe aviso de modo demonstração quando API retorna 503 NOT_CONFIGURED', async () => {

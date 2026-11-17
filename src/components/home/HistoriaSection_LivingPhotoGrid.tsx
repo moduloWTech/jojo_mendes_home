@@ -23,7 +23,7 @@ const ACTS: Act[] = [
     number: '01',
     badge: 'Ato 01 · As Raízes & O Violão',
     title: 'Onde a cantiga começou',
-    quote: '“Comecei com o violão no colo, ouvindo os mestres do forró e sonhando com o dia em que nossa cantiga conquistaria o Brasil.”',
+    quote: '“Comecei com o violão no colo, ouvindo os mestres da nossa música e sonhando com o dia em que nossa cantiga conquistaria o Brasil.”',
     text: 'Ainda menina, a música transbordava nas reuniões em família e nas rodas de escola. A sonoridade das cordas de nylon e a poesia do sertão moldaram uma voz autêntica, feita de verdade e sentimento puro.',
     spotlightLabel: 'O Primeiro Violão',
     pinPosition: { left: '16%', top: '82%' },

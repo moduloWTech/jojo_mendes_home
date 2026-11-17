@@ -45,7 +45,7 @@ const ACTS: TypographicAct[] = [
     tagline: 'Parcerias & Mestres',
     headline: 'Gente especial que moldou o som',
     quote:
-      'Tive o privilégio de dividir notas e abraços com mestres extraordinários. Cada parceria deixou uma marca eterna na minha voz e no meu jeito de fazer forró.',
+      'Tive o privilégio de dividir notas e abraços com mestres extraordinários. Cada parceria deixou uma marca eterna na minha voz e no meu jeito de cantar.',
     range: [0.50, 0.72],
   },
   {
@@ -310,7 +310,7 @@ export function HistoriaSection() {
                     <div className="mt-6 flex items-center gap-2 text-xs text-text-muted">
                       <span className="font-semibold text-primary">— Jojo Mendes</span>
                       <span className="text-white/30">•</span>
-                      <span className="text-white/50 text-[11px]">Voz, paixão e forró</span>
+                      <span className="text-white/50 text-[11px]">Voz, paixão e música brasileira</span>
                     </div>
                   </article>
                 );

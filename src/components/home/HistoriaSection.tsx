@@ -223,16 +223,17 @@ export function HistoriaSection() {
           <div className="space-y-4 sm:space-y-5 text-[17px] sm:text-base lg:text-[16px] text-[#F3F2F6] leading-[1.75] font-sans font-normal">
             <p>
               <strong className="font-semibold text-white">Jojo Mendes</strong> é
-              uma das vozes mais autênticas e marcantes da nova geração do forró e
-              da cantiga brasileira. Com um carisma que cativa à primeira vista e
-              uma presença de palco eletrizante, ela transforma cada apresentação
-              em uma verdadeira celebração da cultura nordestina.
+              uma das vozes mais autênticas, versáteis e marcantes da música
+              popular brasileira. Com um carisma que cativa à primeira vista e uma
+              presença de palco eletrizante, ela transita com maestria pelo forró,
+              seresta, sertanejo, brega e pelos grandes clássicos populares,
+              transformando cada apresentação em uma celebração inesquecível.
             </p>
 
             <p>
-              Inspirada pela poesia dos grandes mestres e com raízes fincadas no
-              violão de infância, seu repertório costura os hinos tradicionais
-              com o ritmo e a pressão dos grandes espetáculos contemporâneos,
+              Inspirada pela riqueza da canção e com raízes fincadas no violão
+              de infância, seu repertório costura a emoção dos ritmos populares
+              com a pressão e o calor dos grandes espetáculos contemporâneos,
               fazendo todo mundo dançar e cantar junto do início ao fim.
             </p>
 

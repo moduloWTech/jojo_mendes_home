@@ -36,7 +36,7 @@ export const copy = {
   },
   hero: {
     srOnlyHeading: 'Jojo Mendes',
-    desktopTaglineLine1: 'Forró, alegria e muita cantiga boa',
+    desktopTaglineLine1: 'Música brasileira, alegria e emoção',
     desktopTaglineLine2: 'para o seu evento!',
     primaryCta: 'Agendar show',
     secondaryCta: 'Ver agenda',
@@ -93,10 +93,11 @@ export const copy = {
     emptyMessage: 'Formação musical em atualização.',
   },
   bookingBanner: {
-    title: 'Leve Jojo Mendes para o seu evento',
-    description:
-      'Entre em contato para consultar disponibilidade e informações sobre shows.',
-    cta: 'Agendar show',
+    eyebrow: 'CONTRATE ESSE SHOW PARA O SEU EVENTO',
+    bigStackedWord: ['CON', 'TRA', 'TE'] as const,
+    title: 'A energia vibrante e a versatilidade da música brasileira no seu evento.',
+    cta: 'Preencher formulário de contratação',
+    subtext: 'Resposta rápida da produção executiva em até 24 horas úteis',
   },
   press: {
     eyebrow: 'PARA PRODUTORES',
