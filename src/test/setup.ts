@@ -10,3 +10,8 @@ vi.mock('next/image', () => ({
   },
 }));
 
+// Mock window.open para testes
+if (typeof window !== 'undefined') {
+  window.open = vi.fn();
+}
+

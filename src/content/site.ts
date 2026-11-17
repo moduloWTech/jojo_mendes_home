@@ -43,9 +43,14 @@ export const socialLinks: SocialLinks = {
 export const commercialContact: {
   email: string | null;
   phone: string | null;
+  whatsappUrl: string;
+  whatsappRawNumber: string;
 } = {
   email: null,
-  phone: null,
+  phone: '(98) 98451-0178',
+  whatsappRawNumber: '5598984510178',
+  whatsappUrl:
+    'https://wa.me/5598984510178?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20shows%20e%20contrata%C3%A7%C3%A3o%20de%20Jojo%20Mendes.',
 };
 
 /**
@@ -485,24 +490,13 @@ export const pressAssets: PressAsset[] = [
   {
     id: 'press-foto-recorte',
     title: 'Foto Recortada para Cartazes',
-    href: '/media/jojo/jojo-recorte-hd.png',
+    href: '/media/jojo/jojo-foto-recorte-cartaz.png',
     format: 'PNG HD',
-    sizeLabel: '1118 × 1600 px',
+    sizeLabel: '682 × 1024 px',
     category: 'foto',
-    thumbnail: '/media/jojo/jojo-recorte-hd.png',
+    thumbnail: '/media/jojo/jojo-foto-recorte-cartaz.png',
     badge: 'Pronta para Flyer',
     isTransparent: true,
-  },
-  {
-    id: 'press-foto-editorial',
-    title: 'Foto Editorial — Ensaio Cantando',
-    href: '/media/jojo/foto-ensaio-cantando.jpeg',
-    format: 'JPEG HD',
-    sizeLabel: 'Alta Resolução',
-    category: 'foto',
-    thumbnail: '/media/jojo/foto-ensaio-cantando.jpeg',
-    badge: 'Retrato de Imprensa',
-    isTransparent: false,
   },
   {
     id: 'press-mapa-palco',

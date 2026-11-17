@@ -97,9 +97,14 @@ export function Footer({ socials = defaultSocialLinks }: FooterProps) {
                     </p>
                   )}
                   {commercialContact.phone && (
-                    <p className="type-body-sm text-text-muted">
-                      {commercialContact.phone}
-                    </p>
+                    <a
+                      href={commercialContact.whatsappUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="type-body-sm text-text-muted hover:text-gold transition-colors inline-block"
+                    >
+                      WhatsApp: {commercialContact.phone}
+                    </a>
                   )}
                 </div>
               )}

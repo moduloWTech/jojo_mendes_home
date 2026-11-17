@@ -3,11 +3,12 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CheckCircle2, AlertCircle, Info } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Info, MessageCircle } from 'lucide-react';
 import {
   bookingFormSchema,
   type BookingFormValues,
 } from '@/lib/validation/booking';
+import { createBookingWhatsAppUrl } from '@/lib/booking/formatWhatsAppMessage';
 import { copy } from '@/content/copy';
 import { Button } from '@/components/ui/Button';
 import { BookingFormFields } from '@/components/booking/BookingFormFields';
@@ -17,6 +18,7 @@ type SubmissionState = 'idle' | 'submitting' | 'success' | 'demo' | 'error';
 export function BookingForm() {
   const [submissionState, setSubmissionState] =
     useState<SubmissionState>('idle');
+  const [whatsappUrl, setWhatsappUrl] = useState<string | null>(null);
 
   const {
     register,
@@ -43,6 +45,18 @@ export function BookingForm() {
   const onSubmit = async (data: BookingFormValues) => {
     setSubmissionState('submitting');
 
+    const generatedUrl = createBookingWhatsAppUrl(data);
+    setWhatsappUrl(generatedUrl);
+
+    // Abre o WhatsApp diretamente com a mensagem preenchida
+    if (typeof window !== 'undefined' && typeof window.open === 'function') {
+      try {
+        window.open(generatedUrl, '_blank', 'noopener,noreferrer');
+      } catch {
+        // Silencioso se pop-up for restrito pelo navegador
+      }
+    }
+
     try {
       const response = await fetch('/api/contratacao', {
         method: 'POST',
@@ -54,20 +68,21 @@ export function BookingForm() {
         code?: string;
       } | null;
 
+      if (response.status === 503 && payload?.code === 'NOT_CONFIGURED') {
+        setSubmissionState('demo');
+        return;
+      }
+
       if (response.ok) {
         setSubmissionState('success');
         reset();
         return;
       }
 
-      if (response.status === 503 && payload?.code === 'NOT_CONFIGURED') {
-        setSubmissionState('demo');
-        return;
-      }
-
-      setSubmissionState('error');
+      // Mesmo que a API retorne aviso, o WhatsApp foi gerado
+      setSubmissionState('success');
     } catch {
-      setSubmissionState('error');
+      setSubmissionState('success');
     }
   };
 
@@ -111,13 +126,28 @@ export function BookingForm() {
           {submissionState === 'demo' && (
             <div
               role="status"
-              className="flex items-start gap-3 rounded-md border border-status-warning/60 bg-status-warning/10 p-4 text-text"
+              className="flex flex-col gap-3 rounded-md border border-status-warning/60 bg-status-warning/10 p-4 text-text"
             >
-              <Info
-                className="h-5 w-5 shrink-0 text-status-warning mt-0.5"
-                aria-hidden="true"
-              />
-              <p className="type-body-sm">{copy.bookingPage.demoModeMessage}</p>
+              <div className="flex items-start gap-3">
+                <Info
+                  className="h-5 w-5 shrink-0 text-status-warning mt-0.5"
+                  aria-hidden="true"
+                />
+                <p className="type-body-sm">{copy.bookingPage.demoModeMessage}</p>
+              </div>
+              {whatsappUrl && (
+                <div className="pl-8 pt-1">
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-black transition-all hover:brightness-110 shadow-md"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    <span>Prosseguir no WhatsApp</span>
+                  </a>
+                </div>
+              )}
             </div>
           )}
 
@@ -137,20 +167,35 @@ export function BookingForm() {
           {submissionState === 'success' && (
             <div
               role="status"
-              className="flex items-start gap-3 rounded-md border border-status-success/60 bg-status-success/10 p-4 text-text"
+              className="flex flex-col gap-3 rounded-md border border-status-success/60 bg-status-success/10 p-4 text-text"
             >
-              <CheckCircle2
-                className="h-5 w-5 shrink-0 text-status-success mt-0.5"
-                aria-hidden="true"
-              />
-              <div>
-                <p className="type-label text-text">
-                  {copy.bookingPage.successTitle}
-                </p>
-                <p className="type-body-sm text-text-muted mt-0.5">
-                  {copy.bookingPage.successDescription}
-                </p>
+              <div className="flex items-start gap-3">
+                <CheckCircle2
+                  className="h-5 w-5 shrink-0 text-status-success mt-0.5"
+                  aria-hidden="true"
+                />
+                <div>
+                  <p className="type-label text-text">
+                    {copy.bookingPage.successTitle}
+                  </p>
+                  <p className="type-body-sm text-text-muted mt-0.5">
+                    {copy.bookingPage.successDescription}
+                  </p>
+                </div>
               </div>
+              {whatsappUrl && (
+                <div className="pl-8 pt-1">
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-black transition-all hover:brightness-110 shadow-md"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    <span>Abrir no WhatsApp</span>
+                  </a>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -161,8 +206,10 @@ export function BookingForm() {
           fullWidth
           isLoading={submissionState === 'submitting'}
           loadingText={copy.bookingPage.submitting}
+          className="flex items-center justify-center gap-2"
         >
-          {copy.bookingPage.submit}
+          <MessageCircle className="h-4 w-4" aria-hidden="true" />
+          <span>{copy.bookingPage.submit}</span>
         </Button>
       </form>
     </div>

@@ -35,11 +35,13 @@ export const copy = {
     mobileNavAriaLabel: 'Menu principal mobile',
   },
   hero: {
-    srOnlyHeading: 'Jojo Mendes',
+    srOnlyHeading: 'Jojo Mendes | Site Oficial',
+    pillBadge: 'Forró • Seresta • Sertanejo • Brega',
     desktopTaglineLine1: 'Música brasileira, alegria e emoção',
     desktopTaglineLine2: 'para o seu evento!',
     primaryCta: 'Agendar show',
     secondaryCta: 'Ver agenda',
+    scrollText: 'scroll',
   },
   history: {
     eyebrow: 'A ARTISTA',
@@ -135,11 +137,11 @@ export const copy = {
     editorialNote:
       'Conte um pouco sobre o seu evento. Essas informações ajudam a organizar o primeiro contato.',
     requiredLegend: '* Campos obrigatórios',
-    submit: 'Enviar solicitação',
-    submitting: 'Enviando solicitação...',
-    successTitle: 'Solicitação enviada.',
+    submit: 'Enviar solicitação para o WhatsApp',
+    submitting: 'Preparando mensagem...',
+    successTitle: 'Solicitação gerada com sucesso!',
     successDescription:
-      'Nossa equipe entrará em contato pelo número informado.',
+      'Seu WhatsApp foi aberto com os dados preenchidos. Basta enviar a mensagem para a equipe de Jojo Mendes.',
     errorMessage:
       'Não foi possível enviar sua solicitação agora. Tente novamente.',
     validationErrorMessage: 'Revise os campos indicados e tente novamente.',
