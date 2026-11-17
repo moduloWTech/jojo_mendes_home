@@ -33,10 +33,6 @@ export function GaleriaSection({ items = defaultGallery }: GaleriaSectionProps) 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const lastClickedRef = useRef<HTMLButtonElement | null>(null);
 
-  // Controle de toque / swipe
-  const touchStartY = useRef(0);
-  const touchStartX = useRef(0);
-
   const total = items.length;
   const activePhoto = items[activeIndex];
 
@@ -65,23 +61,6 @@ export function GaleriaSection({ items = defaultGallery }: GaleriaSectionProps) 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [handleNext, handlePrev, lightboxIndex]);
-
-  // Gestos de toque no celular para girar a roda
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchStartY.current = e.touches[0].clientY;
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const onTouchEnd = (e: React.TouchEvent) => {
-    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
-    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
-    // Arrastar para cima ou para esquerda avança
-    if (deltaY < -40 || deltaX < -40) {
-      handleNext();
-    } else if (deltaY > 40 || deltaX > 40) {
-      handlePrev();
-    }
-  };
 
   const handlePhotoClick = (index: number, e: React.MouseEvent<HTMLButtonElement>) => {
     lastClickedRef.current = e.currentTarget;
@@ -190,11 +169,10 @@ export function GaleriaSection({ items = defaultGallery }: GaleriaSectionProps) 
       {/* =====================================================================
           CENTRO / DIREITA: O GRANDE ARCO CIRCULAR (APENAS O ARCO DIREITO VISÍVEL)
           - No Desktop (lg+): Totalmente intacto, mantendo a experiência perfeita
-          - No Mobile (<lg): Reduzido e centrado ergonomicamente na tela do smartphone
+          - No Mobile (<lg): Reduzido e centrado ergonomicamente na tela do smartphone,
+            com movimentação controlada exclusivamente pelas setas
          ===================================================================== */}
       <div
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
         className="relative z-10 w-full flex-1 flex items-center overflow-visible my-1 sm:my-2 lg:my-0 h-[380px] sm:h-[440px] lg:h-auto"
       >
         {/* Contêiner de posicionamento do centro do círculo:
