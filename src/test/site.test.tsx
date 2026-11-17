@@ -111,6 +111,26 @@ describe('Jojo Mendes — Critérios de Aceite da Home e Contratação', () => {
     expect(screen.getByText(copy.press.emptyMessage)).toBeInTheDocument();
   });
 
+  it('Mapa de Palco exibe trio cênico (Guitarrista, Jojo Mendes, Tecladista)', () => {
+    render(<MusicosSection />);
+
+    expect(screen.getByText(copy.musicians.stageMapDiagramTitle)).toBeInTheDocument();
+    expect(screen.getByText('Guitarrista')).toBeInTheDocument();
+    expect(screen.getByText('Jojo Mendes')).toBeInTheDocument();
+    expect(screen.getByText('Tecladista')).toBeInTheDocument();
+    expect(screen.getByText(copy.musicians.audienceLabel)).toBeInTheDocument();
+  });
+
+  it('Mapa de Palco exibe trio cênico (Guitarrista, Jojo Mendes, Tecladista)', () => {
+    render(<MusicosSection />);
+
+    expect(screen.getByText(copy.musicians.stageMapDiagramTitle)).toBeInTheDocument();
+    expect(screen.getByText('Guitarrista')).toBeInTheDocument();
+    expect(screen.getByText('Jojo Mendes')).toBeInTheDocument();
+    expect(screen.getByText('Tecladista')).toBeInTheDocument();
+    expect(screen.getByText(copy.musicians.audienceLabel)).toBeInTheDocument();
+  });
+
   it('Formulário de contratação valida campos obrigatórios e exibe aviso de modo demonstração quando API retorna 503 NOT_CONFIGURED', async () => {
     const user = userEvent.setup();
     vi.spyOn(global, 'fetch').mockResolvedValueOnce(

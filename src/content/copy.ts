@@ -80,7 +80,16 @@ export const copy = {
   },
   musicians: {
     eyebrow: 'QUEM FAZ O SHOW',
-    title: 'Nossa formação',
+    title: 'Mapa de Palco',
+    subtitle: 'Formação: Voz, Guitarra e Teclado',
+    description:
+      'Disposição cênica e técnica da banda nos palcos. Uma formação enxuta e potente com alta fidelidade sonora para eventos de todos os portes.',
+    stageMapDiagramTitle: 'Diagrama de Palco — Jojo Mendes',
+    audienceLabel: 'Frente do Palco / Público',
+    fullTechnicalMapTitle: 'Mapa Técnico Oficial — Rider de Palco',
+    viewTechnicalMapCta: 'Ver mapa técnico completo',
+    downloadTechnicalMapCta: 'Baixar mapa em alta resolução',
+    closeModalLabel: 'Fechar mapa técnico',
     emptyMessage: 'Formação musical em atualização.',
   },
   bookingBanner: {
