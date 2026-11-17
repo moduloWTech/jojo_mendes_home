@@ -10,6 +10,7 @@ import { HeroDesktop } from '@/components/home/HeroDesktop';
 export function Hero() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isPastHero, setIsPastHero] = useState(false);
+  const [isHeroCovered, setIsHeroCovered] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
 
@@ -34,7 +35,9 @@ export function Hero() {
     };
   }, []);
 
-  // Progresso do scroll: de 0.0 (topo da Hero) a 1.0 (quando a segunda dobra cobre a Hero por completo)
+  // Progresso do scroll:
+  // - De 0.0 até 0.70vh: os botões se separam suavemente para as laterais enquanto a 2ª dobra aguarda abaixo da tela.
+  // - A partir de 0.75vh até 1.75vh: a 2ª dobra sobe cobrindo a Hero.
   useEffect(() => {
     let ticking = false;
 
@@ -43,9 +46,14 @@ export function Hero() {
         window.requestAnimationFrame(() => {
           const vh = window.innerHeight || 800;
           const currentY = window.scrollY;
-          const progress = Math.min(Math.max(currentY / vh, 0), 1);
-          setScrollProgress(progress);
-          setIsPastHero(currentY > vh * 1.15);
+          // Os botões realizam a separação completa nos primeiros 0.70vh de scroll
+          const buttonSeparationProgress = Math.min(
+            Math.max(currentY / (vh * 0.7), 0),
+            1
+          );
+          setScrollProgress(buttonSeparationProgress);
+          setIsHeroCovered(currentY >= vh * 1.65);
+          setIsPastHero(currentY > vh * 1.8);
           ticking = false;
         });
         ticking = true;
@@ -72,19 +80,19 @@ export function Hero() {
       {/* Âncora inicial para navegação */}
       <div id="inicio" className="absolute top-0 left-0 h-px w-px pointer-events-none" aria-hidden="true" />
 
-      {/* Dobra 1 — Totalmente fixa na tela (não sobe com o scroll; permanece parada como palco fixo de parallax) */}
+      {/* Dobra 1 — Totalmente fixa na tela (palco de transição de scroll) */}
       <section
         aria-label={copy.nav.home}
         style={{
           visibility: isPastHero ? 'hidden' : 'visible',
-          pointerEvents: scrollProgress >= 1 ? 'none' : 'auto',
+          pointerEvents: isHeroCovered ? 'none' : 'auto',
         }}
-        className="fixed inset-0 z-10 h-[100svh] w-full overflow-hidden bg-[#ECEEF2]"
+        className="fixed inset-0 z-10 h-[100svh] w-full overflow-hidden bg-[#0B0B0E]"
       >
         {/* Único H1 semântico da Home para leitores de tela e SEO */}
         <h1 className="sr-only">{copy.hero.srOnlyHeading}</h1>
 
-        {/* Camada de vídeo de background cinza-claro para Mobile/Tablet (<1200px) */}
+        {/* Camada de vídeo de background com máscara preta transparente para Mobile/Tablet (<1200px) */}
         <div
           className="pointer-events-none absolute inset-0 z-0 overflow-hidden xl:hidden"
           aria-hidden="true"
@@ -105,7 +113,7 @@ export function Hero() {
                   void e.currentTarget.play();
                 }
               }}
-              className="h-full w-full object-cover object-center grayscale contrast-110 opacity-[0.24]"
+              className="h-full w-full object-cover object-center opacity-85"
             >
               <source src={mobileBgVideoSrc} type="video/mp4" />
             </video>
@@ -116,11 +124,13 @@ export function Hero() {
               fill
               priority
               sizes="100vw"
-              className="object-cover object-center grayscale opacity-20"
+              className="object-cover object-center opacity-50"
             />
           )}
 
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(246,247,250,0.52)_0%,rgba(234,236,241,0.82)_65%,rgba(218,222,230,0.94)_100%)]" />
+          {/* Máscara preta translúcida calibrada: centro bem visível e base com contraste para os CTAs */}
+          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/50" />
         </div>
 
         {/* Composição Mobile (<1200px) */}
@@ -139,8 +149,10 @@ export function Hero() {
         />
       </section>
 
-      {/* Espaço reservado no fluxo do documento (100svh) para a 2ª dobra sobrepor a 1ª no scroll */}
-      <div className="h-[100svh] w-full pointer-events-none" aria-hidden="true" />
+      {/* Espaço reservado no fluxo do documento (175svh):
+          - Primeiros 0.75vh de scroll: a 2ª dobra espera abaixo da tela enquanto os botões se separam
+          - Seguintes 1.00vh de scroll: a 2ª dobra sobe suavemente cobrindo a Hero */}
+      <div className="h-[175svh] w-full pointer-events-none" aria-hidden="true" />
     </>
   );
 }

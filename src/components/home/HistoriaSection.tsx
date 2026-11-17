@@ -46,8 +46,8 @@ const TOPICS: AccordionItem[] = [
 ];
 
 export function HistoriaSection() {
-  // Primeiro item aberto por padrão para indicar intuitivamente a interação
-  const [openId, setOpenId] = useState<string | null>('raizes');
+  // Todos os tópicos iniciam fechados conforme solicitado
+  const [openId, setOpenId] = useState<string | null>(null);
 
   const toggleItem = (id: string) => {
     setOpenId((prev) => (prev === id ? null : id));
@@ -129,17 +129,25 @@ export function HistoriaSection() {
               aria-hidden="true"
             />
 
-            {/* Cabeçalho do Card */}
-            <div className="flex items-center justify-between pb-3.5 border-b border-white/10 mb-2">
-              <div className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#EFC16B]" />
-                <span className="text-[11px] sm:text-xs font-semibold tracking-widest text-[#EFC16B] uppercase font-sans">
-                  Capítulos da História
+            {/* Cabeçalho do Card com destaque para a história da cantora */}
+            <div className="pb-4 sm:pb-5 border-b border-white/10 mb-2">
+              <div className="flex items-center justify-between gap-3 mb-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#EFC16B]" />
+                  <span className="text-[11px] sm:text-xs font-semibold tracking-widest text-[#EFC16B] uppercase font-sans">
+                    A História da Cantora
+                  </span>
+                </div>
+                <span className="text-[11px] text-white/40 font-mono">
+                  03 Atos
                 </span>
               </div>
-              <span className="text-[11px] text-white/40 font-mono">
-                03 Atos
-              </span>
+              <h2 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight">
+                Capítulos da História
+              </h2>
+              <p className="text-xs sm:text-sm text-white/60 font-sans mt-1">
+                Conheça a trajetória, as raízes e os momentos que moldaram a carreira de Jojo Mendes.
+              </p>
             </div>
 
             {/* Lista Sanfona (Accordion) */}
@@ -157,10 +165,10 @@ export function HistoriaSection() {
                       aria-controls={`topic-${topic.id}`}
                       className="group flex w-full items-center justify-between py-4 sm:py-5 text-left transition-colors"
                     >
-                      <div className="flex items-start sm:items-center gap-3 sm:gap-4 pr-3 min-w-0">
+                      <div className="flex items-center gap-3 sm:gap-4 pr-3 min-w-0">
                         {/* Número em caixa baixa dourada */}
                         <span
-                          className={`font-mono text-xs sm:text-sm font-bold transition-colors ${
+                          className={`font-mono text-sm sm:text-base font-bold transition-colors ${
                             isOpen ? 'text-[#EFC16B]' : 'text-white/40 group-hover:text-white/70'
                           }`}
                         >
@@ -175,9 +183,6 @@ export function HistoriaSection() {
                           >
                             {topic.title}
                           </h3>
-                          <p className="text-[11px] sm:text-xs text-white/45 truncate font-sans mt-0.5">
-                            {topic.subtitle}
-                          </p>
                         </div>
                       </div>
 
@@ -203,29 +208,17 @@ export function HistoriaSection() {
                       }`}
                     >
                       <div className="overflow-hidden">
-                        {/* Citação do capítulo */}
-                        <blockquote className="relative pl-3 border-l-2 border-[#EFC16B] mb-3">
-                          <p className="font-display italic text-xs sm:text-sm text-[#FAF7F1]/95 leading-relaxed">
+                        {/* Citação do capítulo com fonte maior e destaque */}
+                        <blockquote className="relative pl-3.5 border-l-2 border-[#EFC16B] mb-3.5 mt-1">
+                          <p className="font-display italic text-sm sm:text-base lg:text-[17px] text-[#FAF7F1] leading-relaxed">
                             {topic.quote}
                           </p>
                         </blockquote>
 
-                        {/* Texto Narrativo */}
-                        <p className="text-xs sm:text-[13px] text-[#FAF7F1]/80 leading-relaxed font-sans mb-3.5">
+                        {/* Texto Narrativo com fonte maior para leitura confortável */}
+                        <p className="text-sm sm:text-[15px] lg:text-[16px] text-[#FAF7F1]/85 leading-relaxed font-sans">
                           {topic.text}
                         </p>
-
-                        {/* Tags em pílulas */}
-                        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-white/5">
-                          {topic.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="inline-flex items-center gap-1 rounded-full bg-white/5 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-medium text-[#FAF7F1]/75 border border-white/10"
-                            >
-                              <span className="text-[#EFC16B]">✦</span> {tag}
-                            </span>
-                          ))}
-                        </div>
                       </div>
                     </div>
                   </div>

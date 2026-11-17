@@ -27,97 +27,26 @@ export function HeroMobile({
   isRevealed = true,
   scrollProgress = 0,
 }: HeroMobileProps) {
-  // A separação dos elementos acompanha o scroll enquanto a segunda dobra sobe
+  // A separação dos botões acompanha o scroll
   const progress = Math.min(Math.max(scrollProgress, 0), 1);
-  // Transição com aceleração gradual para afastar os elementos
-  const splitProgress = Math.pow(progress, 1.15);
-
-  // Deslocamento horizontal no mobile
-  const leftShiftPct = splitProgress * 120;
-  const rightShiftPct = splitProgress * 120;
+  const splitProgress = Math.pow(progress, 1.1);
 
   // Deslocamento dos botões (um para esquerda e outro para direita) em viewport width
-  const btnShiftVw = splitProgress * 125;
+  const btnShiftVw = splitProgress * 120;
 
-  // Os elementos ficam 100% visíveis enquanto se deslocam e a 2ª dobra passa por cima
-  const artworkOpacity = progress >= 1 ? 0 : 1;
-  const btnOpacity = progress >= 1 ? 0 : 1;
+  // Dissolve suavemente quando os botões saem da tela
+  const btnOpacity = Math.max(1 - Math.max((progress - 0.75) / 0.25, 0), 0);
 
   return (
     <div
       data-testid="hero-mobile"
       className="relative z-10 flex h-[100svh] max-h-[100svh] w-full flex-col items-center justify-between overflow-hidden px-4 pt-[72px] pb-[max(20px,calc(env(safe-area-inset-bottom)+14px))] xl:hidden"
     >
-      {/* Bloco central com separação horizontal em scroll */}
-      <div
-        className={cn(
-          'relative my-auto w-full max-w-[370px] sm:max-w-[430px] max-h-[calc(100svh-228px)] aspect-[1199/1144] select-none',
-          isRevealed ? 'animate-hero-stage' : 'opacity-0'
-        )}
-      >
-        {/* Camada Esquerda: Cantora apoiada + Letras EITA (desloca para a ESQUERDA no scroll) */}
-        <div
-          style={{
-            transform: `translate3d(-${leftShiftPct}%, 0, 0)`,
-            opacity: artworkOpacity,
-          }}
-          className="pointer-events-none absolute inset-0 z-20 will-change-transform"
-        >
-          {/* Foto solo da Jojo dentro das letras EITA */}
-          <div
-            style={EITA_MASK_STYLE}
-            className="pointer-events-none absolute left-[28.6%] top-[21.85%] z-10 h-[37.85%] w-[67.7%] overflow-hidden bg-[#181416]"
-            aria-hidden="true"
-          >
-            <Image
-              src="/media/jojo/hero-desktop-eita-solo-v3.jpg"
-              alt=""
-              fill
-              priority
-              sizes="(max-width: 767px) 70vw, 320px"
-              className="object-cover object-center"
-            />
-            {isRevealed && (
-              <div className="animate-hero-shine pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-[#FFF3C4]/30 to-transparent" />
-            )}
-          </div>
-
-          {/* Recorte da Jojo apoiada no E e moldura do EITA */}
-          <Image
-            src="/media/jojo/hero-split-jojo-eita.png"
-            alt="Jojo Mendes — Eita"
-            fill
-            priority
-            sizes="(max-width: 767px) 92vw, 430px"
-            className="pointer-events-none relative z-20 object-contain"
-          />
-        </div>
-
-        {/* Camada Direita: Palavra CANTIGA! em ouro + Frase (desloca para a DIREITA no scroll) */}
-        <div
-          style={{
-            transform: `translate3d(${rightShiftPct}%, 0, 0)`,
-            opacity: artworkOpacity,
-          }}
-          className="pointer-events-none absolute inset-0 z-10 will-change-transform"
-        >
-          <Image
-            src="/media/jojo/hero-split-cantiga.png"
-            alt="Cantiga!"
-            fill
-            priority
-            sizes="(max-width: 767px) 92vw, 430px"
-            className="pointer-events-none object-contain"
-          />
-        </div>
-
+      {/* Bloco inferior com os CTAs na parte de baixo da dobra */}
+      <div className="relative z-30 mt-auto mb-4 sm:mb-6 flex w-full max-w-[350px] sm:max-w-[380px] flex-col gap-3">
         <p className="sr-only">
           {copy.hero.desktopTaglineLine1} {copy.hero.desktopTaglineLine2}
         </p>
-      </div>
-
-      {/* Bloco inferior: Os 2 CTAs empilhados se separando no scroll */}
-      <div className="relative z-30 flex w-full max-w-[350px] sm:max-w-[380px] flex-col gap-2.5">
         {/* Botão 1: Desloca para a ESQUERDA no scroll */}
         <div
           style={{
@@ -164,12 +93,12 @@ export function HeroMobile({
           <Link
             href={destinations.schedule}
             className={cn(
-              'group inline-flex min-h-[48px] w-full items-center justify-center gap-2.5 rounded-pill border border-[#1A1A22]/75 bg-white/65 px-6 text-[16px] font-semibold text-[#111115] backdrop-blur-sm transition-all duration-150 ease-out active:scale-[0.98]',
+              'group inline-flex min-h-[48px] w-full items-center justify-center gap-2.5 rounded-pill border border-white/30 bg-black/45 px-6 text-[16px] font-semibold text-[#FAF7F1] backdrop-blur-md transition-all duration-150 ease-out hover:border-white hover:bg-white hover:text-[#111115] active:scale-[0.98]',
               isRevealed ? 'animate-hero-cta-2' : 'opacity-0'
             )}
           >
             <PlayCircle
-              className="h-4 w-4 shrink-0 text-[#111115]"
+              className="h-4 w-4 shrink-0 text-current"
               strokeWidth={2}
               aria-hidden="true"
             />

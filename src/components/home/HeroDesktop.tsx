@@ -34,28 +34,23 @@ export function HeroDesktop({
   isRevealed = true,
   scrollProgress = 0,
 }: HeroDesktopProps) {
-  // A separação dos elementos acompanha o scroll enquanto a segunda dobra sobe
+  // A separação dos botões acompanha o scroll
   const progress = Math.min(Math.max(scrollProgress, 0), 1);
-  // Transição com aceleração gradual para afastar os elementos
-  const splitProgress = Math.pow(progress, 1.15);
-
-  // Deslocamento horizontal em porcentagem da largura do container
-  const leftShiftPct = splitProgress * 120;
-  const rightShiftPct = splitProgress * 120;
+  // Transição com aceleração gradual para afastar os botões
+  const splitProgress = Math.pow(progress, 1.1);
 
   // Deslocamento dos botões (um para esquerda e outro para direita) em viewport width
-  const btnShiftVw = splitProgress * 70;
+  const btnShiftVw = splitProgress * 65;
 
-  // Os elementos ficam 100% visíveis enquanto se deslocam e a 2ª dobra passa por cima
-  const artworkOpacity = progress >= 1 ? 0 : 1;
-  const btnOpacity = progress >= 1 ? 0 : 1;
+  // Dissolve suavemente quando os botões atingem as bordas da tela
+  const btnOpacity = Math.max(1 - Math.max((progress - 0.75) / 0.25, 0), 0);
 
   return (
     <div
       data-testid="hero-desktop"
-      className="relative z-10 hidden h-[100svh] max-h-[100svh] w-full items-center justify-center overflow-hidden bg-[#ECEEF2] pt-[76px] pb-3 xl:flex"
+      className="relative z-10 hidden h-[100svh] max-h-[100svh] w-full items-center justify-center overflow-hidden bg-[#0B0B0E] pt-[76px] pb-3 xl:flex"
     >
-      {/* Camada 0 (Full-Screen): Vídeo de background com filtro cinza-claro */}
+      {/* Camada 0 (Full-Screen): Vídeo de background com máscara preta transparente */}
       <div
         className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
         aria-hidden="true"
@@ -76,7 +71,7 @@ export function HeroDesktop({
                 void e.currentTarget.play();
               }
             }}
-            className="h-full w-full object-cover object-center grayscale contrast-110 opacity-[0.24] scale-[1.02]"
+            className="h-full w-full object-cover object-center opacity-85 scale-[1.02]"
           >
             <source src={videoSrc} type="video/mp4" />
           </video>
@@ -86,94 +81,37 @@ export function HeroDesktop({
             alt=""
             fill
             sizes="100vw"
-            className="object-cover object-center grayscale opacity-20"
+            className="object-cover object-center opacity-50"
           />
         )}
 
-        {/* Véu atmosférico cinza-claro sobre o vídeo de fundo */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(246,247,250,0.52)_0%,rgba(234,236,241,0.80)_62%,rgba(218,222,230,0.93)_100%)]" />
+        {/* Máscara preta translúcida calibrada: centro bem visível e base com contraste para os CTAs */}
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/50" />
 
         {/* Aura dourada sutil de palco */}
         <div
           className={cn(
-            'absolute left-[28%] top-[18%] h-[420px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(239,193,107,0.24)_0%,rgba(239,193,107,0)_70%)] blur-2xl',
+            'absolute left-[28%] top-[18%] h-[420px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(239,193,107,0.18)_0%,rgba(239,193,107,0)_70%)] blur-2xl',
             isRevealed ? 'animate-hero-spotlight' : 'opacity-0'
           )}
         />
       </div>
 
-      {/* Container central da arte */}
+      {/* Container inferior dos CTAs (parte de baixo da dobra) */}
       <div
         className={cn(
-          'relative z-10 mx-auto h-[calc(100svh-90px)] max-h-[860px] w-auto max-w-[94vw] aspect-[1199/1144] select-none',
+          'relative z-20 mx-auto flex h-full w-full max-w-[580px] flex-col items-center justify-end pb-12 2xl:pb-16 px-4 select-none',
           isRevealed ? 'animate-hero-stage' : 'opacity-0'
         )}
       >
-        {/* Camada Esquerda: Cantora apoiada + Letras EITA (desloca para a ESQUERDA no scroll) */}
-        <div
-          style={{
-            transform: `translate3d(-${leftShiftPct}%, 0, 0)`,
-            opacity: artworkOpacity,
-          }}
-          className="pointer-events-none absolute inset-0 z-20 will-change-transform"
-        >
-          {/* Foto interna nas letras EITA (100% alinhada à máscara e acompanha o deslocamento) */}
-          <div
-            style={EITA_MASK_STYLE}
-            className="pointer-events-none absolute left-[28.6%] top-[21.85%] z-10 h-[37.85%] w-[67.7%] overflow-hidden bg-[#181416]"
-            aria-hidden="true"
-          >
-            <Image
-              src="/media/jojo/hero-desktop-eita-solo-v3.jpg"
-              alt=""
-              fill
-              priority
-              sizes="760px"
-              className="object-cover object-center"
-            />
-
-            {/* Feixe de luz dourada inicial */}
-            {isRevealed && (
-              <div className="animate-hero-shine pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-[#FFF3C4]/30 to-transparent" />
-            )}
-          </div>
-
-          {/* Recorte da Jojo apoiada no E e moldura do EITA */}
-          <Image
-            src="/media/jojo/hero-split-jojo-eita.png"
-            alt="Jojo Mendes — Eita"
-            fill
-            priority
-            sizes="(min-width: 1280px) 85vh, 100vw"
-            className="pointer-events-none relative z-20 object-contain"
-          />
-        </div>
-
-        {/* Camada Direita: Palavra CANTIGA! em ouro + Frase (desloca para a DIREITA no scroll) */}
-        <div
-          style={{
-            transform: `translate3d(${rightShiftPct}%, 0, 0)`,
-            opacity: artworkOpacity,
-          }}
-          className="pointer-events-none absolute inset-0 z-10 will-change-transform"
-        >
-          <Image
-            src="/media/jojo/hero-split-cantiga.png"
-            alt="Cantiga!"
-            fill
-            priority
-            sizes="(min-width: 1280px) 85vh, 100vw"
-            className="pointer-events-none object-contain"
-          />
-        </div>
-
         {/* Texto semântico para leitores de tela */}
         <p className="sr-only">
           {copy.hero.desktopTaglineLine1} {copy.hero.desktopTaglineLine2}
         </p>
 
         {/* Camada dos Botões: se separam no scroll (Agendar para a esquerda, Ver agenda para a direita) */}
-        <div className="absolute left-[29.0%] right-[13.5%] bottom-[2.2%] z-30 flex items-center justify-center gap-3 2xl:gap-4 pointer-events-auto">
+        <div className="flex w-full items-center justify-center gap-3.5 2xl:gap-5 pointer-events-auto">
           {/* Botão 1: Desloca para a ESQUERDA no scroll */}
           <div
             style={{
@@ -185,7 +123,7 @@ export function HeroDesktop({
             <Link
               href={destinations.booking}
               className={cn(
-                'group relative inline-flex h-[44px] 2xl:h-[52px] w-full items-center justify-center gap-2.5 overflow-hidden rounded-pill bg-gradient-to-b from-[#FAE084] via-[#EBB338] to-[#CE8814] px-5 2xl:px-7 text-[15px] 2xl:text-[17px] font-bold text-[#111115] shadow-[0_8px_24px_rgba(206,136,20,0.38)] transition-all duration-200 ease-out hover:brightness-105 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(235,179,56,0.5)] active:scale-[0.98]',
+                'group relative inline-flex h-[48px] 2xl:h-[56px] w-full items-center justify-center gap-2.5 overflow-hidden rounded-pill bg-gradient-to-b from-[#FAE084] via-[#EBB338] to-[#CE8814] px-6 2xl:px-8 text-[16px] 2xl:text-[18px] font-bold text-[#111115] shadow-[0_8px_24px_rgba(206,136,20,0.38)] transition-all duration-200 ease-out hover:brightness-105 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(235,179,56,0.5)] active:scale-[0.98]',
                 isRevealed ? 'animate-hero-cta-1' : 'opacity-0'
               )}
             >
@@ -222,7 +160,7 @@ export function HeroDesktop({
             <Link
               href={destinations.schedule}
               className={cn(
-                'group inline-flex h-[44px] 2xl:h-[52px] w-full items-center justify-center gap-2.5 rounded-pill border border-[#1A1A22]/75 bg-white/60 px-5 2xl:px-7 text-[15px] 2xl:text-[17px] font-semibold text-[#111115] backdrop-blur-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[#111115] hover:bg-[#111115] hover:text-[#FAF7F1] active:scale-[0.98]',
+                'group inline-flex h-[48px] 2xl:h-[56px] w-full items-center justify-center gap-2.5 rounded-pill border border-white/30 bg-black/45 px-6 2xl:px-8 text-[16px] 2xl:text-[18px] font-semibold text-[#FAF7F1] backdrop-blur-md transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-white hover:bg-white hover:text-[#111115] active:scale-[0.98]',
                 isRevealed ? 'animate-hero-cta-2' : 'opacity-0'
               )}
             >
