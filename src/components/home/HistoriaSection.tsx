@@ -49,6 +49,7 @@ export function HistoriaSection() {
   const sectionRef = React.useRef<HTMLElement | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0.5); // inicia centralizado para SSR seguro
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Todos os tópicos iniciam fechados conforme solicitado
   const [openId, setOpenId] = useState<string | null>(null);
@@ -65,6 +66,9 @@ export function HistoriaSection() {
       return;
     }
 
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setPrefersReducedMotion(motionQuery.matches);
 
@@ -72,9 +76,11 @@ export function HistoriaSection() {
       setPrefersReducedMotion(event.matches);
     };
     motionQuery.addEventListener('change', onMotionChange);
+    window.addEventListener('resize', checkMobile);
 
     return () => {
       motionQuery.removeEventListener('change', onMotionChange);
+      window.removeEventListener('resize', checkMobile);
     };
   }, []);
 
@@ -125,26 +131,52 @@ export function HistoriaSection() {
   const bgScale = prefersReducedMotion ? 1 : 1.18 - scrollProgress * 0.22;
   const bgParallaxY = prefersReducedMotion ? 0 : (0.5 - scrollProgress) * 120;
 
-  // Curvas de transição do card (flutuação na entrada e dissolução na saída)
+  // Curvas de transição do card:
+  // - Desktop: o quadro vem da esquerda (-520px) em trajeto estendido e se posiciona à direita, com fade-in gradual.
+  // - Mobile: o quadro mantém a aproximação centrada rápida com escala e flutuação vertical (sem deslocamento lateral).
+  let cardTranslateX = 0;
   let cardTranslateY = 0;
   let cardScale = 1;
   let cardOpacity = 1;
 
   if (!prefersReducedMotion) {
-    if (scrollProgress < 0.45) {
-      // Entrada (Scroll In): Card sobe flutuando com escala e fade-in
-      const t = Math.min(Math.max((scrollProgress - 0.08) / 0.35, 0), 1);
-      const ease = 1 - Math.pow(1 - t, 3);
-      cardTranslateY = (1 - ease) * 65;
-      cardScale = 0.93 + ease * 0.07;
-      cardOpacity = 0.15 + ease * 0.85;
-    } else if (scrollProgress > 0.65) {
-      // Saída (Scroll Out): Card desacelera e dissolve suavemente antes da próxima dobra cobrir
-      const t = Math.min(Math.max((scrollProgress - 0.65) / 0.28, 0), 1);
-      const ease = Math.pow(t, 2.5);
-      cardTranslateY = -ease * 55;
-      cardScale = 1 - ease * 0.05;
-      cardOpacity = 1 - ease * 0.75;
+    if (isMobile) {
+      // Mobile: Aproximação mais rápida centrada com escala (conforme versão anterior)
+      if (scrollProgress < 0.42) {
+        const t = Math.min(Math.max((scrollProgress - 0.06) / 0.3, 0), 1);
+        const ease = 1 - Math.pow(1 - t, 3);
+        cardTranslateX = 0; // Centralizado, sem corte lateral
+        cardTranslateY = (1 - ease) * 50; // Sobe suavemente
+        cardScale = 0.92 + ease * 0.08;   // Aproximação rápida em escala
+        cardOpacity = 0.15 + ease * 0.85; // Revelação rápida
+      } else if (scrollProgress > 0.68) {
+        const t = Math.min(Math.max((scrollProgress - 0.68) / 0.25, 0), 1);
+        const ease = Math.pow(t, 2);
+        cardTranslateX = 0;
+        cardTranslateY = -ease * 35;
+        cardScale = 1 - ease * 0.04;
+        cardOpacity = 1 - ease * 0.75;
+      }
+    } else {
+      // Desktop: Mantido exatamente como está (grande trajeto horizontal estendido de -520px até a direita com fade-in)
+      const startX = -520;
+
+      if (scrollProgress < 0.58) {
+        const t = Math.min(Math.max((scrollProgress - 0.12) / 0.46, 0), 1);
+        const ease = 1 - Math.pow(1 - t, 2.2);
+
+        cardTranslateX = (1 - ease) * startX; // De -520px até 0px (posição final à direita)
+        cardTranslateY = (1 - ease) * 20;     // Leve acomodação vertical
+        cardScale = 0.92 + ease * 0.08;       // Escala gradual de 0.92 para 1.0
+        cardOpacity = Math.min(Math.max(ease * 1.15, 0), 1); // Vai aparecendo de 0% até 100%
+      } else if (scrollProgress > 0.78) {
+        const t = Math.min(Math.max((scrollProgress - 0.78) / 0.2, 0), 1);
+        const ease = Math.pow(t, 2);
+        cardTranslateX = ease * 40;
+        cardTranslateY = -ease * 40;
+        cardScale = 1 - ease * 0.04;
+        cardOpacity = 1 - ease * 0.8;
+      }
     }
   }
 
@@ -248,7 +280,7 @@ export function HistoriaSection() {
           style={{
             transform: prefersReducedMotion
               ? 'none'
-              : `translate3d(0, ${cardTranslateY}px, 0) scale(${cardScale})`,
+              : `translate3d(${cardTranslateX}px, ${cardTranslateY}px, 0) scale(${cardScale})`,
             opacity: prefersReducedMotion ? 1 : cardOpacity,
             willChange: 'transform, opacity',
             transition:
