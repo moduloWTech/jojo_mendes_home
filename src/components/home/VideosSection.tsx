@@ -9,8 +9,8 @@ import {
   SkipForward,
   ExternalLink,
   Mic2,
-  Music2,
-  Volume2,
+  Guitar,
+  Sliders,
   ChevronLeft,
   ChevronRight,
   X,
@@ -521,34 +521,34 @@ export function VideosSection({ items = defaultVideos }: VideosSectionProps) {
               <Mic2 className="h-4 w-4" />
             </div>
             <p className="font-display text-xs font-bold text-white mt-0.5">
-              100% Ao Vivo
+              Voz Marcante
             </p>
             <p className="text-[10px] text-white/45 font-sans">
-              Sem playback
+              Presença de palco
             </p>
           </div>
 
           <div className="flex flex-col items-center gap-1">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 border border-white/10 text-[#EFC16B]">
-              <Music2 className="h-4 w-4" />
+              <Guitar className="h-4 w-4" />
             </div>
             <p className="font-display text-xs font-bold text-white mt-0.5">
-              Banda Completa
+              Guitarra & Teclado
             </p>
             <p className="text-[10px] text-white/45 font-sans">
-              Metais & Sanfona
+              Acompanhamento ao vivo
             </p>
           </div>
 
           <div className="flex flex-col items-center gap-1">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 border border-white/10 text-[#EFC16B]">
-              <Volume2 className="h-4 w-4" />
+              <Sliders className="h-4 w-4" />
             </div>
             <p className="font-display text-xs font-bold text-white mt-0.5">
-              Pressão Sonora
+              Setup Versátil
             </p>
             <p className="text-[10px] text-white/45 font-sans">
-              Som de Arena
+              Fácil adaptação ao evento
             </p>
           </div>
 

@@ -72,10 +72,11 @@ export const heroMedia: HeroMedia = {
  * Texto provisório literal aprovado na documentação até envio da biografia oficial.
  */
 export const biography: BiographyContent = {
-  isProvisional: true,
+  isProvisional: false,
   paragraphs: [
-    'A história de Jojo Mendes será contada aqui, com as palavras e os momentos que fazem parte da sua trajetória.',
-    'Este espaço receberá a biografia oficial da cantora, acompanhada de fotografias selecionadas.',
+    'A música faz parte de quem eu sou desde os meus primeiros passos. Comecei a cantar aos três anos no coral da igreja — e como eu era bem pequena, precisavam me colocar em cima de um banquinho atrás do púlpito para que o microfone me alcançasse. Em casa, passava os dias cantando de tudo: de louvores a clássicos que marcaram minha infância.',
+    'Minha história nos palcos começou a mudar quando acompanhei uma prima em um teste de locução em estúdio. No intervalo, sentei para cantar despretensiosamente com um tecladista que gravava por lá. Ali fui descoberta. A partir dali vieram os ensaios, o rock, os bailes de bolero, a Banda Fox, Banda Rubi e parcerias inesquecíveis na noite.',
+    'Cada ensaio e cada palco foram fundamentais para construir a artista que sou hoje. Na minha carreira solo, levo essa história inteira comigo: um repertório feito para emocionar, dançar e celebrar a vida ao lado de quem ama a boa música.',
   ],
   photo: {
     src: '/media/jojo/foto-estudio-microfone.png',
@@ -95,29 +96,29 @@ export const artistStoryChapters: ArtistStoryChapter[] = [
     id: 1,
     chapter: '01',
     badge: 'A Infância & As Raízes',
-    title: 'Onde a cantiga começou',
-    text: 'Comecei cantando na escola e já sentia que a música era o meu caminho. Eu vivia com o violão no colo, ouvindo os clássicos e sonhando com o dia em que subiria em grandes palcos para levar a minha cantiga pro mundo.',
+    title: 'A menina do banquinho',
+    text: 'Aos três anos de idade, eu já cantava no coral da igreja. Como era pequenininha, me colocavam em cima de um banquinho atrás do púlpito para alcançar o microfone. Em casa, passava o dia cantando louvores e os clássicos da infância.',
   },
   {
     id: 2,
     chapter: '02',
-    badge: 'A Estrada & O Palco',
-    title: 'A primeira banda',
-    text: 'A primeira banda que eu montei foi onde tudo virou realidade. Ensaios até a madrugada, van na estrada e o aprendizado de segurar o público no peito. Foi ali que entendi que o palco é a minha verdadeira casa.',
+    badge: 'A Descoberta',
+    title: 'A surpresa no estúdio',
+    text: 'Fui acompanhar minha prima num teste de locução em estúdio. No intervalo, comecei a cantar despretensiosamente com um rapaz que tocava teclado por lá. Me ouviram e ali recebi o convite para a minha primeira banda.',
   },
   {
     id: 3,
     chapter: '03',
-    badge: 'Os Encontros Marcantes',
-    title: 'Gente especial na caminhada',
-    text: 'Já toquei com muita gente especial que me moldou como artista. Cada mestre, cada músico que cruzou o meu caminho deixou um pedaço de si no meu som. É essa troca verdadeira que faz a música nordestina ser tão rica.',
+    badge: 'A Estrada & A Noite',
+    title: 'A escola dos palcos',
+    text: 'Passei pela Banda Fox, pela Banda Rubi, cantei do rock ao bolero e dividi o microfone em palcos marcantes da noite. Essa bagagem eclética me ensinou a sentir a energia do público e a dominar o palco.',
   },
   {
     id: 4,
     chapter: '04',
-    badge: 'A Entrega Total',
-    title: 'Tudo de mim em cada show',
-    text: 'Pra mim não importa o tamanho do público: se tiver dez ou dez mil pessoas, a entrega é exatamente a mesma. Em cada show eu deixo o meu suor, minha voz e toda a minha alma no palco.',
+    badge: 'Carreira Solo',
+    title: 'Minha voz, minha verdade',
+    text: 'Hoje, na minha carreira solo, canto com a alma aberta. É um repertório pensado para fazer dançar, emocionar e celebrar a vida ao lado de quem ama a boa música popular.',
   },
 ];
 

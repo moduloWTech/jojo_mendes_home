@@ -222,26 +222,15 @@ export function HistoriaSection() {
           {/* Parágrafos da História (Acessibilidade WCAG AAA: contraste de alta fidelidade) */}
           <div className="space-y-4 sm:space-y-5 text-[17px] sm:text-base lg:text-[16px] text-[#F3F2F6] leading-[1.75] font-sans font-normal">
             <p>
-              <strong className="font-semibold text-white">Jojo Mendes</strong> é
-              uma das vozes mais autênticas, versáteis e marcantes da música
-              popular brasileira. Com um carisma que cativa à primeira vista e uma
-              presença de palco eletrizante, ela transita com maestria pelo forró,
-              seresta, sertanejo, brega e pelos grandes clássicos populares,
-              transformando cada apresentação em uma celebração inesquecível.
+              A música faz parte de quem eu sou desde os meus primeiros passos. Comecei a cantar aos três anos no coral da igreja — e como eu era bem pequena, precisavam me colocar em cima de um banquinho atrás do púlpito para que o microfone me alcançasse. Em casa, passava os dias cantando de tudo: de louvores a clássicos que marcaram minha infância.
             </p>
 
             <p>
-              Inspirada pela riqueza da canção e com raízes fincadas no violão
-              de infância, seu repertório costura a emoção dos ritmos populares
-              com a pressão e o calor dos grandes espetáculos contemporâneos,
-              fazendo todo mundo dançar e cantar junto do início ao fim.
+              Minha história nos palcos começou a mudar quando acompanhei uma prima em um teste de locução em estúdio. No intervalo, sentei para cantar despretensiosamente com um tecladista que gravava por lá. Ali fui descoberta. A partir dali vieram os ensaios, o rock, os bailes de bolero, a Banda Fox, Banda Rubi e parcerias inesquecíveis na noite.
             </p>
 
             <p>
-              Ao lado de sua banda completa e com uma estrutura de alto nível,
-              Jojo entrega uma experiência envolvente e cheia de calor humano — o
-              espetáculo ideal para grandes festivais, eventos corporativos,
-              feiras, praças públicas e festas particulares em todo o país.
+              Cada ensaio e cada palco foram fundamentais para construir a artista que sou hoje. Na minha carreira solo, levo essa história inteira comigo: um repertório feito para emocionar, dançar e celebrar a vida ao lado de quem ama a boa música.
             </p>
           </div>
 
