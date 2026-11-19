@@ -80,7 +80,7 @@ describe('Jojo Mendes — Critérios de Aceite da Home e Contratação', () => {
     expect(screen.getByText(/02\/06/)).toBeInTheDocument();
   });
 
-  it('Galeria possui nomes acessíveis "Abrir foto [n] da galeria" e abre Lightbox ao clicar', async () => {
+  it('Galeria possui nomes acessíveis "Abrir foto [n] da galeria", limita a 8 fotos e exibe CTA para Instagram', async () => {
     const user = userEvent.setup();
     render(<GaleriaSection />);
 
@@ -88,6 +88,13 @@ describe('Jojo Mendes — Critérios de Aceite da Home e Contratação', () => {
       name: copy.gallery.openPhotoLabel(1),
     });
     expect(firstPhotoBtn).toBeInTheDocument();
+
+    // CTA do Instagram
+    const instagramLinks = screen.getAllByRole('link', {
+      name: /Instagram/i,
+    });
+    expect(instagramLinks.length).toBeGreaterThanOrEqual(1);
+    expect(instagramLinks[0]).toHaveAttribute('href', expect.stringContaining('instagram.com'));
 
     await user.click(firstPhotoBtn);
 

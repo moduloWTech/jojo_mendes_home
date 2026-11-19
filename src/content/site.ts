@@ -31,7 +31,7 @@ export const brand = {
  * Quando null, o link não é renderizado no rodapé (zero links fictícios).
  */
 export const socialLinks: SocialLinks = {
-  instagram: null,
+  instagram: 'https://www.instagram.com/jojomendesoficial',
   tiktok: null,
   youtube: 'https://www.youtube.com/@jojomendesoficial',
 };

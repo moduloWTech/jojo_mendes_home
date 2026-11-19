@@ -2,8 +2,15 @@
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight, Sparkles, Maximize2, Compass } from 'lucide-react';
-import { gallery as defaultGallery } from '@/content/site';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Sparkles,
+  Maximize2,
+  Compass,
+  ArrowUpRight,
+} from 'lucide-react';
+import { gallery as defaultGallery, socialLinks } from '@/content/site';
 import { copy } from '@/content/copy';
 import type { GalleryImage } from '@/types/site';
 import { Container } from '@/components/ui/Container';
@@ -14,6 +21,28 @@ import { cn } from '@/lib/utils';
 interface GaleriaSectionProps {
   items?: GalleryImage[];
 }
+
+function InstagramIcon({ className = 'w-4 h-4' }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    </svg>
+  );
+}
+
+// Limite máximo de fotos no anel para preservar rigorosamente a geometria do layout
+const MAX_GALLERY_PHOTOS = 8;
 
 // =====================================================================
 // GEOMETRIA RADIAL EXATA DO ANEL CURVO (ANNULAR SECTOR)
@@ -29,12 +58,17 @@ const ORIGIN_Y = 167.91;
 const STEP_ANGLE = 24; // Ângulo entre setores adjacentes
 
 export function GaleriaSection({ items = defaultGallery }: GaleriaSectionProps) {
+  // Limita estritamente a 8 fotos para manter a geometria e a harmonia radial do anel
+  const galleryItems = items.slice(0, MAX_GALLERY_PHOTOS);
+  const total = galleryItems.length;
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const lastClickedRef = useRef<HTMLButtonElement | null>(null);
 
-  const total = items.length;
-  const activePhoto = items[activeIndex];
+  const activePhoto = galleryItems[activeIndex];
+  const instagramUrl =
+    socialLinks.instagram || 'https://www.instagram.com/jojomendesoficial';
 
   // Rotação: próxima foto
   const handleNext = useCallback(() => {
@@ -162,6 +196,24 @@ export function GaleriaSection({ items = defaultGallery }: GaleriaSectionProps) 
                 </div>
               </div>
             )}
+
+            {/* CTA oficial para o Instagram */}
+            <div className="mt-3 sm:mt-4">
+              <a
+                href={instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Abrir Instagram oficial de Jojo Mendes para ver mais fotos"
+                className="group inline-flex items-center gap-2.5 px-4 sm:px-5 py-2.5 sm:py-3 rounded-full border border-[#EFC16B]/40 bg-gradient-to-r from-[#EFC16B]/15 via-[#EFC16B]/5 to-transparent backdrop-blur-md text-[#EFC16B] text-xs sm:text-sm font-semibold transition-all duration-300 hover:border-[#EFC16B] hover:bg-[#EFC16B] hover:text-[#08070A] hover:shadow-[0_8px_25px_rgba(239,193,107,0.25)] active:scale-95"
+              >
+                <InstagramIcon className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
+                <span>{copy.gallery.instagramCta}</span>
+                <ArrowUpRight className="w-3.5 h-3.5 opacity-70 transition-transform duration-300 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+              <p className="text-[11px] text-white/45 mt-2 font-sans font-light">
+                {copy.gallery.instagramSubtitle}
+              </p>
+            </div>
           </div>
         </RevealOnScroll>
       </div>
@@ -190,7 +242,7 @@ export function GaleriaSection({ items = defaultGallery }: GaleriaSectionProps) 
 
           {/* Wrapper escalonado da roda: Desktop intacto (scale-[0.96] / scale-[1.05]), Mobile adaptado (scale-[0.45]) */}
           <div className="relative origin-left scale-[0.45] sm:scale-[0.56] md:scale-[0.70] lg:scale-[0.96] xl:scale-[1.05]">
-            {items.map((photo, index) => {
+            {galleryItems.map((photo, index) => {
               // Cálculo da distância angular relativa ao activeIndex
               const diff =
                 ((index - activeIndex + Math.floor(total / 2)) % total + total) % total -
@@ -304,8 +356,20 @@ export function GaleriaSection({ items = defaultGallery }: GaleriaSectionProps) 
           <span>Apenas a foto ativa fica colorida • Clique para ampliar</span>
         </div>
 
-        {/* Setas de navegação no canto inferior direito */}
+        {/* Ações e setas de navegação no canto inferior direito */}
         <div className="ml-auto flex items-center gap-3">
+          <a
+            href={instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Abrir Instagram para ver mais fotos de Jojo Mendes"
+            className="hidden md:inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-white/15 bg-[#121019]/80 backdrop-blur-md text-xs font-medium text-white/75 hover:text-[#EFC16B] hover:border-[#EFC16B]/60 transition-all duration-200"
+          >
+            <InstagramIcon className="w-3.5 h-3.5 text-[#EFC16B]" />
+            <span>+ fotos no Instagram</span>
+            <ArrowUpRight className="w-3 h-3 opacity-60" />
+          </a>
+
           <button
             type="button"
             onClick={handlePrev}
@@ -328,7 +392,7 @@ export function GaleriaSection({ items = defaultGallery }: GaleriaSectionProps) 
 
       {/* Lightbox para ampliação em tela cheia ao clicar */}
       <PhotoLightbox
-        images={items}
+        images={galleryItems}
         currentIndex={lightboxIndex}
         onClose={() => setLightboxIndex(null)}
         onPrev={() =>

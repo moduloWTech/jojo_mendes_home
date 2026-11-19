@@ -78,6 +78,9 @@ export const copy = {
     closeGalleryLabel: 'Fechar galeria',
     showMoreCta: 'Ver mais fotos',
     showLessCta: 'Ver menos fotos',
+    instagramCta: 'Ver mais fotos no Instagram',
+    instagramSubtitle:
+      'Acompanhe bastidores, ensaios e a rotina da estrada no perfil oficial.',
     emptyTitle: 'Galeria em preparação.',
   },
   musicians: {
