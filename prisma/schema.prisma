@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// 1. Usuário Administrador
+model AdminUser {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("admin_users")
+}
+
+// 2. Agenda de Shows
+enum ShowStatus {
+  confirmed
+  sold_out
+  cancelled
+}
+
+model Show {
+  id         String     @id @default(uuid())
+  date       String     // YYYY-MM-DD
+  time       String?    // Ex: "22:00"
+  city       String
+  state      String     // Ex: "MA"
+  venue      String
+  detailsUrl String?
+  status     ShowStatus @default(confirmed)
+  order      Int        @default(0)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  @@index([date])
+  @@map("shows")
+}
+
+// 3. Galeria de Fotos (Limite de 8 fotos ativas no layout do anel)
+model GalleryImage {
+  id              String   @id @default(uuid())
+  src             String
+  alt             String
+  width           Int      @default(1200)
+  height          Int      @default(800)
+  positionMobile  String?
+  positionDesktop String?
+  order           Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("gallery_images")
+}
+
+// 4. Vídeos do YouTube
+model Video {
+  id        String   @id @default(uuid())
+  youtubeId String
+  title     String
+  isDemo    Boolean  @default(false)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("videos")
+}
+

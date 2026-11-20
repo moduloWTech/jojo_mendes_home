@@ -107,12 +107,36 @@ export function GaleriaSection({ items = defaultGallery }: GaleriaSectionProps) 
       <section
         id="galeria"
         aria-labelledby="galeria-heading"
-        className="section-spacing bg-[#08070A] text-white"
+        className="section-spacing bg-[#08070A] text-white py-16 sm:py-20"
       >
         <Container>
           <RevealOnScroll>
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center">
-              <p className="text-white/60 text-lg">{copy.gallery.emptyTitle}</p>
+            <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-8 sm:p-12 text-center max-w-xl mx-auto space-y-4 backdrop-blur-xl">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#EFC16B]/30 bg-[#EFC16B]/10 text-xs font-semibold uppercase tracking-wider text-[#EFC16B]">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>{copy.gallery.eyebrow} • Registros Oficiais</span>
+              </div>
+              <h2
+                id="galeria-heading"
+                className="text-2xl sm:text-4xl font-serif font-bold text-white tracking-tight"
+              >
+                {copy.gallery.title}
+              </h2>
+              <p className="text-white/60 text-sm max-w-md mx-auto">
+                {copy.gallery.emptyTitle}
+              </p>
+              <div className="pt-2">
+                <a
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-[#EFC16B]/40 bg-[#EFC16B]/10 text-[#EFC16B] text-xs font-semibold transition-all hover:bg-[#EFC16B] hover:text-black"
+                >
+                  <InstagramIcon className="w-4 h-4" />
+                  <span>{copy.gallery.instagramCta}</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 opacity-70 group-hover:opacity-100" />
+                </a>
+              </div>
             </div>
           </RevealOnScroll>
         </Container>
