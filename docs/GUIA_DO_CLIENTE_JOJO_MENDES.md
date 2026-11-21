@@ -89,3 +89,46 @@ Ao entrar no painel ([/admin](https://jojomendesoficial.vercel.app/admin)), voc�
 1. **Fotos:** Para fotos de palco e ensaios, prefira imagens nítidas na orientação vertical ou quadrada.
 2. **Tempo Real:** Qualquer alteração feita no painel (novo show, nova foto ou vídeo) reflete no site público em questão de segundos.
 3. **Suporte MW Technology:** Caso precisem de ajustes visuais, novas funcionalidades ou dúvidas, nossa equipe técnica está sempre à disposição!
+
+---
+
+## 📱 Modelos de Mensagem para Envio via WhatsApp
+
+### Modelo Completo & Caloroso:
+```text
+Olá, Jojo e equipe! Tudo bem? 🎶✨
+
+É com muita alegria que entregamos o seu novo Site Oficial, desenvolvido pela MW Technology com todo o luxo, sofisticação e tecnologia que a sua carreira merece! 🚀
+
+O site já está no ar para você divulgar para seus fãs e contratantes:
+🌐 Seu Site Oficial:
+https://jojomendesoficial.vercel.app
+
+🔐 Seu Painel Administrativo Exclusivo:
+Criamos uma área restrita e super fácil de usar para você e sua produção gerenciarem o site em tempo real (adicionar novos shows, atualizar fotos e colocar novos vídeos do YouTube):
+
+👉 Link de Acesso ao Painel:
+https://jojomendesoficial.vercel.app/admin/login
+
+👤 E-mail: admin@jojomendes.com.br
+🔑 Senha: admin_jojo_2026!
+
+Qualquer dúvida ou suporte que precisarem, a equipe da MW Technology está 100% à disposição. Parabéns pelo novo site e muito sucesso na turnê! 🎤⭐
+```
+
+### Modelo Curto & Direto:
+```text
+Olá, Jojo! Seguem os links oficiais e os acessos do seu novo site:
+
+🌐 Site no ar:
+https://jojomendesoficial.vercel.app
+
+🔐 Painel para cadastrar Shows, Fotos e Vídeos:
+https://jojomendesoficial.vercel.app/admin/login
+
+• Login: admin@jojomendes.com.br
+• Senha: admin_jojo_2026!
+
+Qualquer dúvida, conte com a equipe da MW Technology! 🚀
+```
+

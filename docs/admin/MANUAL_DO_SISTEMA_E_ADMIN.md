@@ -122,3 +122,4 @@ O arquivo `src/middleware.ts` intercepta todas as requisições para `/admin/*` 
 - No endpoint `POST /api/admin/fotos`, se a variável `BLOB_READ_WRITE_TOKEN` estiver presente, o arquivo é enviado diretamente ao bucket Vercel e a URL pública da CDN é salva no banco.
 - Ao deletar uma foto via `DELETE /api/admin/fotos/[id]`, o arquivo é excluído automaticamente da CDN do Blob caso seja uma URL gerenciada pela Vercel.
 - O `next.config.ts` possui `remotePatterns` configurados com wildcard para aceitar todas as URLs seguras de CDN sem gerar erros de renderização no `<Image />`.
+
