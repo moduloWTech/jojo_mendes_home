@@ -14,6 +14,8 @@ import {
   ExternalLink,
   Info,
 } from 'lucide-react';
+import { useToast } from '@/components/admin/ToastContext';
+import { ConfirmModal } from '@/components/admin/ConfirmModal';
 
 function InstagramIcon({ className = 'w-4 h-4' }: { className?: string }) {
   return (
@@ -41,6 +43,7 @@ interface GalleryPhoto {
 }
 
 export default function AdminFotosPage() {
+  const toast = useToast();
   const [photos, setPhotos] = useState<GalleryPhoto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -55,8 +58,9 @@ export default function AdminFotosPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  // Deletion State
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  // Confirm Deletion State
+  const [photoToDelete, setPhotoToDelete] = useState<GalleryPhoto | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -84,7 +88,7 @@ export default function AdminFotosPage() {
 
   const openModal = () => {
     if (isLimitReached) {
-      alert(
+      toast.warning(
         'O limite máximo de 8 fotos já foi atingido. Remova uma foto antes de adicionar uma nova.'
       );
       return;
@@ -103,6 +107,23 @@ export default function AdminFotosPage() {
     setFilePreview(null);
     setImageUrl('');
     setFormError(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleModeSwitch = (mode: 'file' | 'url') => {
+    setUploadMode(mode);
+    setFormError(null);
+    if (mode === 'url') {
+      setSelectedFile(null);
+      setFilePreview(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } else {
+      setImageUrl('');
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,6 +185,7 @@ export default function AdminFotosPage() {
 
       closeModal();
       await fetchPhotos();
+      toast.success('Foto adicionada à galeria com sucesso!');
     } catch (err: unknown) {
       setFormError(err instanceof Error ? err.message : 'Falha na operação.');
     } finally {
@@ -171,18 +193,20 @@ export default function AdminFotosPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Deseja realmente remover esta foto da galeria?')) return;
-    setDeletingId(id);
+  const confirmDeletePhoto = async () => {
+    if (!photoToDelete) return;
+    setIsDeleting(true);
 
     try {
-      const res = await fetch(`/api/admin/fotos/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/admin/fotos/${photoToDelete.id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Não foi possível remover a foto.');
       await fetchPhotos();
+      toast.success('Foto removida da galeria com sucesso.');
+      setPhotoToDelete(null);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Erro ao excluir');
+      toast.error(err instanceof Error ? err.message : 'Erro ao excluir');
     } finally {
-      setDeletingId(null);
+      setIsDeleting(false);
     }
   };
 
@@ -289,7 +313,7 @@ export default function AdminFotosPage() {
                   src={photo.src}
                   alt={photo.alt}
                   fill
-                  unoptimized={photo.src.startsWith('http')}
+                  unoptimized={photo.src.startsWith('http') || undefined}
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 />
@@ -305,16 +329,11 @@ export default function AdminFotosPage() {
                 {/* Botão de Excluir */}
                 <div className="absolute top-2.5 right-2.5">
                   <button
-                    onClick={() => handleDelete(photo.id)}
-                    disabled={deletingId === photo.id}
-                    className="p-2 rounded-lg bg-red-600/80 hover:bg-red-600 text-white backdrop-blur-md border border-red-400/30 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 disabled:opacity-50"
+                    onClick={() => setPhotoToDelete(photo)}
+                    className="p-2 rounded-lg bg-red-600/80 hover:bg-red-600 text-white backdrop-blur-md border border-red-400/30 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
                     title="Excluir foto da galeria"
                   >
-                    {deletingId === photo.id ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
-                      <Trash2 className="w-3.5 h-3.5" />
-                    )}
+                    <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
@@ -374,7 +393,7 @@ export default function AdminFotosPage() {
             <div className="grid grid-cols-2 gap-2 p-1 rounded-xl bg-white/[0.04] border border-white/10">
               <button
                 type="button"
-                onClick={() => setUploadMode('file')}
+                onClick={() => handleModeSwitch('file')}
                 className={`py-2 text-xs font-semibold rounded-lg transition-all ${
                   uploadMode === 'file'
                     ? 'bg-[#EFC16B] text-black shadow-md'
@@ -385,7 +404,7 @@ export default function AdminFotosPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setUploadMode('url')}
+                onClick={() => handleModeSwitch('url')}
                 className={`py-2 text-xs font-semibold rounded-lg transition-all ${
                   uploadMode === 'url'
                     ? 'bg-[#EFC16B] text-black shadow-md'
@@ -405,12 +424,13 @@ export default function AdminFotosPage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {uploadMode === 'file' ? (
-                <div>
+                <div key="mode-file-upload">
                   <label className="block text-[11px] font-semibold uppercase tracking-wider text-white/70 mb-2">
                     Arquivo de Imagem (JPG, PNG, WebP)
                   </label>
 
                   <input
+                    key="file-input-element"
                     type="file"
                     ref={fileInputRef}
                     accept="image/*"
@@ -424,6 +444,7 @@ export default function AdminFotosPage() {
                         src={filePreview}
                         alt="Preview"
                         fill
+                        unoptimized
                         className="object-cover"
                       />
                       <button
@@ -431,6 +452,9 @@ export default function AdminFotosPage() {
                         onClick={() => {
                           setSelectedFile(null);
                           setFilePreview(null);
+                          if (fileInputRef.current) {
+                            fileInputRef.current.value = '';
+                          }
                         }}
                         className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/70 hover:bg-black text-white"
                         title="Trocar imagem"
@@ -456,15 +480,16 @@ export default function AdminFotosPage() {
                   )}
                 </div>
               ) : (
-                <div>
+                <div key="mode-url-upload">
                   <label className="block text-[11px] font-semibold uppercase tracking-wider text-white/70 mb-1.5">
                     URL pública da Imagem
                   </label>
                   <input
+                    key="url-input-element"
                     type="url"
                     required
                     placeholder="https://exemplo.com/foto-jojo.jpg"
-                    value={imageUrl}
+                    value={imageUrl || ''}
                     onChange={(e) => setImageUrl(e.target.value)}
                     className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-xs text-white placeholder-white/30 focus:border-[#EFC16B] focus:outline-none"
                   />
@@ -480,7 +505,7 @@ export default function AdminFotosPage() {
                   type="text"
                   required
                   placeholder="Ex: Jojo Mendes cantando ao vivo no palco de Barretos"
-                  value={altText}
+                  value={altText || ''}
                   onChange={(e) => setAltText(e.target.value)}
                   className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-xs text-white placeholder-white/30 focus:border-[#EFC16B] focus:outline-none"
                 />
@@ -514,6 +539,18 @@ export default function AdminFotosPage() {
           </div>
         </div>
       )}
+      {/* Modal de Confirmação de Exclusão */}
+      <ConfirmModal
+        isOpen={Boolean(photoToDelete)}
+        title="Remover Foto da Galeria"
+        description={`Deseja realmente remover esta foto ("${photoToDelete?.alt}")? Ela será retirada imediatamente da grade de 8 fotos do site.`}
+        confirmText="Sim, Remover"
+        cancelText="Cancelar"
+        isDanger={true}
+        isLoading={isDeleting}
+        onConfirm={confirmDeletePhoto}
+        onClose={() => setPhotoToDelete(null)}
+      />
     </div>
   );
 }

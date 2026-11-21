@@ -16,6 +16,8 @@ import {
   X,
   Loader2,
 } from 'lucide-react';
+import { useToast } from '@/components/admin/ToastContext';
+import { ConfirmModal } from '@/components/admin/ConfirmModal';
 
 interface ShowItem {
   id: string;
@@ -30,6 +32,7 @@ interface ShowItem {
 }
 
 export default function AdminShowsPage() {
+  const toast = useToast();
   const [shows, setShows] = useState<ShowItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,8 +55,9 @@ export default function AdminShowsPage() {
     order: 0,
   });
 
-  // Delete confirmation
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  // Confirm Deletion State
+  const [showToDelete, setShowToDelete] = useState<ShowItem | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchShows = async () => {
     try {
@@ -148,6 +152,7 @@ export default function AdminShowsPage() {
 
       closeModal();
       await fetchShows();
+      toast.success(editingShow ? 'Show atualizado com sucesso!' : 'Show cadastrado com sucesso!');
     } catch (err: unknown) {
       setFormError(err instanceof Error ? err.message : 'Falha na operação.');
     } finally {
@@ -155,18 +160,20 @@ export default function AdminShowsPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza de que deseja excluir este show da agenda?')) return;
-    setDeletingId(id);
+  const confirmDeleteShow = async () => {
+    if (!showToDelete) return;
+    setIsDeleting(true);
 
     try {
-      const res = await fetch(`/api/admin/shows/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/admin/shows/${showToDelete.id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Não foi possível excluir o show.');
       await fetchShows();
+      toast.success('Show removido da agenda com sucesso.');
+      setShowToDelete(null);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Erro ao excluir');
+      toast.error(err instanceof Error ? err.message : 'Erro ao excluir');
     } finally {
-      setDeletingId(null);
+      setIsDeleting(false);
     }
   };
 
@@ -333,16 +340,11 @@ export default function AdminShowsPage() {
                             <Pencil className="w-3.5 h-3.5" />
                           </button>
                           <button
-                            onClick={() => handleDelete(show.id)}
-                            disabled={deletingId === show.id}
-                            className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 transition-all disabled:opacity-50"
+                            onClick={() => setShowToDelete(show)}
+                            className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 transition-all"
                             title="Excluir este show"
                           >
-                            {deletingId === show.id ? (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            ) : (
-                              <Trash2 className="w-3.5 h-3.5" />
-                            )}
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </td>
@@ -553,6 +555,18 @@ export default function AdminShowsPage() {
           </div>
         </div>
       )}
+      {/* Modal de Confirmação de Exclusão */}
+      <ConfirmModal
+        isOpen={Boolean(showToDelete)}
+        title="Remover Show da Agenda"
+        description={`Tem certeza que deseja excluir o show em "${showToDelete?.city} - ${showToDelete?.state}" (${showToDelete?.venue})? Esta ação removerá a data da turnê no site.`}
+        confirmText="Sim, Excluir"
+        cancelText="Cancelar"
+        isDanger={true}
+        isLoading={isDeleting}
+        onConfirm={confirmDeleteShow}
+        onClose={() => setShowToDelete(null)}
+      />
     </div>
   );
 }

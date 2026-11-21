@@ -307,6 +307,7 @@ export function GaleriaSection({ items = defaultGallery }: GaleriaSectionProps) 
                       src={photo.src}
                       alt={photo.alt}
                       fill
+                      unoptimized={photo.src.startsWith('http') || undefined}
                       sizes="450px"
                       style={{
                         objectPosition: photo.positionDesktop ?? 'center 20%',

@@ -136,6 +136,7 @@ export function PhotoLightbox({
             src={activeImage.src}
             alt={activeImage.alt}
             fill
+            unoptimized={activeImage.src.startsWith('http') || undefined}
             sizes="(max-width: 1024px) 95vw, 896px"
             className="object-contain"
           />

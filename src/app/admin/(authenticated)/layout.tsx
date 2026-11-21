@@ -15,6 +15,7 @@ import {
   X,
   Sparkles,
 } from 'lucide-react';
+import { ToastProvider } from '@/components/admin/ToastContext';
 
 const navItems = [
   {
@@ -61,22 +62,24 @@ export default function AdminAuthenticatedLayout({
   };
 
   return (
-    <div className="min-h-screen bg-[#08070A] text-white flex flex-col font-sans selection:bg-[#EFC16B]/30 selection:text-[#EFC16B]">
-      {/* Top Navbar */}
-      <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#0E0C14]/90 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
-          {/* Logo & Brand */}
-          <div className="flex items-center gap-6">
-            <Link href="/admin" className="flex items-center gap-3 group">
-              <div className="relative w-36 sm:w-44 h-11">
-                <Image
-                  src="/media/admin/logo-admin.png"
-                  alt="Jojo Mendes — Eita Cantiga!"
-                  fill
-                  priority
-                  className="object-contain object-left"
-                />
-              </div>
+    <ToastProvider>
+      <div className="min-h-screen bg-[#08070A] text-white flex flex-col font-sans selection:bg-[#EFC16B]/30 selection:text-[#EFC16B]">
+        {/* Top Navbar */}
+        <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#0E0C14]/90 backdrop-blur-xl">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
+            {/* Logo & Brand */}
+            <div className="flex items-center gap-6">
+              <Link href="/admin" className="flex items-center gap-3 group">
+                <div className="relative w-36 sm:w-44 h-11">
+                  <Image
+                    src="/media/admin/logo-admin.png"
+                    alt="Jojo Mendes — Eita Cantiga!"
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 150px, 180px"
+                    className="object-contain object-left"
+                  />
+                </div>
               <span className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[#EFC16B]/30 bg-[#EFC16B]/10 text-[10px] font-semibold uppercase tracking-wider text-[#EFC16B]">
                 <Sparkles className="w-2.5 h-2.5" />
                 Painel
@@ -212,6 +215,7 @@ export default function AdminAuthenticatedLayout({
         </p>
       </footer>
     </div>
+    </ToastProvider>
   );
 }
 

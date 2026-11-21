@@ -14,6 +14,8 @@ import {
   X,
   Tv,
 } from 'lucide-react';
+import { useToast } from '@/components/admin/ToastContext';
+import { ConfirmModal } from '@/components/admin/ConfirmModal';
 
 function YoutubeIcon({ className = 'w-4 h-4' }: { className?: string }) {
   return (
@@ -32,6 +34,7 @@ interface VideoItem {
 }
 
 export default function AdminVideosPage() {
+  const toast = useToast();
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,8 +51,9 @@ export default function AdminVideosPage() {
   // Video Preview Modal State
   const [activePreviewId, setActivePreviewId] = useState<string | null>(null);
 
-  // Deletion State
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  // Confirm Deletion State
+  const [videoToDelete, setVideoToDelete] = useState<VideoItem | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const fetchVideos = async () => {
     try {
@@ -112,6 +116,7 @@ export default function AdminVideosPage() {
 
       closeModal();
       await fetchVideos();
+      toast.success('Vídeo cadastrado com sucesso!');
     } catch (err: unknown) {
       setFormError(err instanceof Error ? err.message : 'Falha na operação.');
     } finally {
@@ -119,18 +124,20 @@ export default function AdminVideosPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Deseja realmente remover este vídeo do site oficial?')) return;
-    setDeletingId(id);
+  const confirmDeleteVideo = async () => {
+    if (!videoToDelete) return;
+    setIsDeleting(true);
 
     try {
-      const res = await fetch(`/api/admin/videos/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/admin/videos/${videoToDelete.id}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Não foi possível remover o vídeo.');
       await fetchVideos();
+      toast.success('Vídeo removido do site com sucesso.');
+      setVideoToDelete(null);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Erro ao excluir');
+      toast.error(err instanceof Error ? err.message : 'Erro ao excluir');
     } finally {
-      setDeletingId(null);
+      setIsDeleting(false);
     }
   };
 
@@ -267,16 +274,11 @@ export default function AdminVideosPage() {
                       </a>
 
                       <button
-                        onClick={() => handleDelete(vid.id)}
-                        disabled={deletingId === vid.id}
-                        className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition-all disabled:opacity-50"
+                        onClick={() => setVideoToDelete(vid)}
+                        className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition-all"
                         title="Excluir vídeo"
                       >
-                        {deletingId === vid.id ? (
-                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        ) : (
-                          <Trash2 className="w-3.5 h-3.5" />
-                        )}
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
@@ -408,6 +410,18 @@ export default function AdminVideosPage() {
           </div>
         </div>
       )}
+      {/* Modal de Confirmação de Exclusão */}
+      <ConfirmModal
+        isOpen={Boolean(videoToDelete)}
+        title="Remover Vídeo do Site"
+        description={`Tem certeza que deseja remover o vídeo "${videoToDelete?.title}"? Ele será retirado imediatamente do carrossel da home.`}
+        confirmText="Sim, Remover"
+        cancelText="Cancelar"
+        isDanger={true}
+        isLoading={isDeleting}
+        onConfirm={confirmDeleteVideo}
+        onClose={() => setVideoToDelete(null)}
+      />
     </div>
   );
 }
