@@ -56,6 +56,7 @@ export async function POST(request: NextRequest) {
         const safeName = `${Date.now()}-${file.name.replace(/\s+/g, '-').toLowerCase()}`;
         const blob = await put(`galeria/${safeName}`, file, {
           access: 'public',
+          token: process.env.BLOB_READ_WRITE_TOKEN.trim(),
         });
         publicSrc = blob.url;
       } else if (supabaseAdmin) {

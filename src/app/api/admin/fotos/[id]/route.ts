@@ -23,7 +23,9 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     if (photo && photo.src.includes('public.blob.vercel-storage.com') && process.env.BLOB_READ_WRITE_TOKEN) {
       try {
         const { del } = await import('@vercel/blob');
-        await del(photo.src);
+        await del(photo.src, {
+          token: process.env.BLOB_READ_WRITE_TOKEN?.trim(),
+        });
       } catch (delError) {
         console.warn('Aviso ao remover blob da Vercel:', delError);
       }
