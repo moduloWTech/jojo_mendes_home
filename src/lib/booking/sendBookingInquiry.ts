@@ -17,8 +17,10 @@ export async function sendBookingInquiry(
   const recipientEmail = process.env.BOOKING_RECIPIENT_EMAIL?.trim();
   const resendApiKey = process.env.RESEND_API_KEY?.trim();
 
+  // Quando operando exclusivamente com WhatsApp (sem e-mail/webhook),
+  // a solicitação é considerada concluída com sucesso via WhatsApp.
   if (!webhookUrl && !(recipientEmail && resendApiKey)) {
-    return { status: 'not_configured' };
+    return { status: 'sent' };
   }
 
   try {

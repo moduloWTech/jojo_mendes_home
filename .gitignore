@@ -5,6 +5,8 @@ dist/
 coverage/
 .env
 .env*.local
+.env.production
+.env*.production*
 .DS_Store
 *.tsbuildinfo
 next-env.d.ts

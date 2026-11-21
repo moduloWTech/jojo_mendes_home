@@ -16,6 +16,19 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
   const { id } = await context.params;
 
   try {
+    const photo = await prisma.galleryImage.findUnique({
+      where: { id },
+    });
+
+    if (photo && photo.src.includes('public.blob.vercel-storage.com') && process.env.BLOB_READ_WRITE_TOKEN) {
+      try {
+        const { del } = await import('@vercel/blob');
+        await del(photo.src);
+      } catch (delError) {
+        console.warn('Aviso ao remover blob da Vercel:', delError);
+      }
+    }
+
     await prisma.galleryImage.delete({
       where: { id },
     });

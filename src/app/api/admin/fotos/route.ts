@@ -50,14 +50,22 @@ export async function POST(request: NextRequest) {
       const buffer = Buffer.from(await file.arrayBuffer());
       let publicSrc: string;
 
-      if (supabaseAdmin) {
+      if (process.env.BLOB_READ_WRITE_TOKEN) {
+        // Vercel Blob Storage nativo
+        const { put } = await import('@vercel/blob');
+        const safeName = `${Date.now()}-${file.name.replace(/\s+/g, '-').toLowerCase()}`;
+        const blob = await put(`galeria/${safeName}`, file, {
+          access: 'public',
+        });
+        publicSrc = blob.url;
+      } else if (supabaseAdmin) {
         publicSrc = await uploadGalleryPhotoToStorage(
           buffer,
           file.name,
           file.type || 'image/jpeg'
         );
       } else {
-        // Fallback local caso Supabase Storage ainda não esteja configurado
+        // Fallback local caso nenhum storage em nuvem esteja configurado
         const uploadDir = path.join(process.cwd(), 'public', 'media', 'uploads');
         await fs.mkdir(uploadDir, { recursive: true });
         const safeName = `${Date.now()}-${file.name.replace(/\s+/g, '-').toLowerCase()}`;
