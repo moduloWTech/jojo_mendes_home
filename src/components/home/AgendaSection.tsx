@@ -68,23 +68,30 @@ export function ShowCard({ show }: ShowCardProps) {
         </div>
       </div>
 
-      {/* Horário ou link discreto à direita */}
-      <div className="shrink-0 text-right">
-        {show.detailsUrl ? (
-          <a
-            href={show.detailsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[12px] sm:text-[13px] font-semibold text-[#EFC16B] hover:underline"
-          >
-            <span>{copy.schedule.detailsCta}</span>
-            <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-          </a>
+      {/* Horário, link de ingressos e status à direita */}
+      <div className="shrink-0 flex items-center gap-2.5 sm:gap-3 text-right">
+        {show.time && (
+          <span className="text-[12px] sm:text-[14px] font-medium tabular-nums text-[#E5DDD3]/80">
+            {show.time}
+          </span>
+        )}
+
+        {show.status === 'sold_out' ? (
+          <span className="rounded-full border border-red-500/40 bg-red-500/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-400">
+            Esgotado
+          </span>
         ) : (
-          show.time && (
-            <span className="rounded-full border border-[#FAF7F1]/10 bg-[#FAF7F1]/5 px-2.5 py-0.5 lg:border-0 lg:bg-transparent lg:p-0 text-[12px] sm:text-[14px] font-medium tabular-nums text-[#E5DDD3]/90">
-              {show.time}
-            </span>
+          show.detailsUrl && (
+            <a
+              href={show.detailsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Comprar ingressos para show em ${show.city}`}
+              className="inline-flex items-center gap-1 rounded-full border border-[#EFC16B]/40 bg-[#EFC16B]/15 hover:bg-[#EFC16B] text-[#EFC16B] hover:text-black px-2.5 sm:px-3 py-1 text-[11px] sm:text-[12px] font-semibold transition-all shadow-sm"
+            >
+              <span>Ingressos</span>
+              <ArrowUpRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden="true" />
+            </a>
           )
         )}
       </div>
